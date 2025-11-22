@@ -828,31 +828,31 @@
 
   <script>
     <script>
-  // Mobile nav toggle – same on every page
-  (function () {
-    const navToggle = document.getElementById("navToggle");
-    const navLinks  = document.getElementById("navLinks");
+   <!-- Mobile nav toggle -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const navToggle = document.querySelector('.nav-toggle');
+      const navLinks  = document.querySelector('.nav-links');
 
-    if (!navToggle || !navLinks) return;
+      if (!navToggle || !navLinks) return;
 
-    navToggle.addEventListener("click", () => {
-      navToggle.classList.toggle("is-open");
-      navLinks.classList.toggle("is-open");
-    });
+      navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('is-open');
+        navLinks.classList.toggle('is-open');
+      });
 
-    // Close menu when a link is clicked (mobile)
-    navLinks.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => {
-        navToggle.classList.remove("is-open");
-        navLinks.classList.remove("is-open");
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navToggle.classList.remove('is-open');
+          navLinks.classList.remove('is-open');
+        });
       });
     });
-  })();
- </script>
+  </script>
 </body>
 </html>
-
     
+
 
 
 
