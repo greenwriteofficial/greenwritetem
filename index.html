@@ -116,15 +116,14 @@
     /* -------- NAVBAR -------- */
     /* HAMBURGER BUTTON */
 .nav-toggle {
-  display: none;               /* shown only on mobile */
-  width: 30px;
-  height: 22px;
+  display: none;           /* hidden on desktop, shown on mobile */
+  width: 28px;
+  height: 20px;
   margin-left: auto;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  display: none;
   flex-direction: column;
   justify-content: space-between;
 }
@@ -135,50 +134,59 @@
   height: 2px;
   background: #ffffff;
   border-radius: 999px;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-/* X animation when menu open */
+/* X state */
 .nav-toggle.is-open span:nth-child(1) {
-  transform: translateY(10px) rotate(45deg);
+  transform: translateY(9px) rotate(45deg);
 }
 .nav-toggle.is-open span:nth-child(2) {
   opacity: 0;
 }
 .nav-toggle.is-open span:nth-child(3) {
-  transform: translateY(-10px) rotate(-45deg);
+  transform: translateY(-9px) rotate(-45deg);
 }
-/* Mobile menu styles */
+
+/* MOBILE MENU */
 @media (max-width: 900px) {
-  .nav-toggle {
-    display: flex;             /* show hamburger on mobile */
+  .nav {
+    padding: 0.75rem 1rem;
   }
 
-  .nav {
-    padding: 0.7rem 1.1rem;
+  .nav-toggle {
+    display: flex;
   }
 
   .nav-links {
     position: fixed;
-    top: 56px;                 /* under the navbar */
+    top: 56px;                  /* just below the navbar */
     left: 0;
     right: 0;
     background: rgba(5, 8, 22, 0.98);
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
-    padding: 1rem 1.5rem 1.6rem;
-    transform: translateY(-120%);
+    padding: 1rem 1.4rem 1.6rem;
+    max-height: 0;
+    overflow: hidden;
     opacity: 0;
     pointer-events: none;
-    transition: transform 0.25s ease, opacity 0.25s ease;
+    transition: max-height 0.25s ease, opacity 0.25s ease;
+  }
+
+  .nav-links.is-open {
+    max-height: 260px;          /* enough for all links */
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .nav-links a,
   .nav-links .nav-cta {
     width: 100%;
   }
-
+}
   /* visible state when opened via JS */
   .nav-links.is-open {
     transform: translateY(0);
@@ -1111,6 +1119,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
+
 
 
 
