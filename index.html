@@ -1117,8 +1117,30 @@ document.getElementById("year").textContent = new Date().getFullYear();
   });
 }
   </script>
+        <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks  = document.querySelector('.nav-links');
+
+    if (!navToggle || !navLinks) return;
+
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('is-open');
+      navLinks.classList.toggle('is-open');
+    });
+
+    // Close menu when you tap a link (optional)
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('is-open');
+        navLinks.classList.remove('is-open');
+      });
+    });
+  });
+</script>
 </body>
 </html>
+
 
 
 
