@@ -730,27 +730,31 @@
       renderCart();
     });
     <script>
-  // Mobile nav toggle
-  const navToggle = document.getElementById('navToggle');
-  const navLinks  = document.getElementById('navLinks');
+ <script>
+  // Mobile nav toggle – same on every page
+  (function () {
+    const navToggle = document.getElementById("navToggle");
+    const navLinks  = document.getElementById("navLinks");
 
-  if (navToggle && navLinks) {
-    navToggle.addEventListener('click', () => {
-      navToggle.classList.toggle('is-open');
-      navLinks.classList.toggle('is-open');
+    if (!navToggle || !navLinks) return;
+
+    navToggle.addEventListener("click", () => {
+      navToggle.classList.toggle("is-open");
+      navLinks.classList.toggle("is-open");
     });
-  }
-  // Optional: close menu when clicking a link
-  navMenu.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", () => {
-      navMenu.classList.remove("nav-links--open");
-      navToggle.classList.remove("nav-toggle--open");
+
+    // Close menu when a link is clicked (mobile)
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        navToggle.classList.remove("is-open");
+        navLinks.classList.remove("is-open");
+      });
     });
-  });
-}
+  })();
   </script>
 </body>
 </html>
+
 
 
 
