@@ -1032,96 +1032,94 @@
     </div>
   </footer>
 
-  <script src="cart.js"></script>
+    <script src="cart.js"></script>
 
+  <!-- Preloader + mini calendar + footer year -->
   <script>
-    // Hide preloader (logo screen) when page is ready
-   function renderMiniCalendar() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth(); // 0–11
-  const today = now.getDate();
+    function renderMiniCalendar() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth(); // 0–11
+      const today = now.getDate();
 
-  const monthNames = [
-    "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-    "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
-  ];
+      const monthNames = [
+        "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+        "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+      ];
 
-  const monthEl = document.getElementById("calMonth");
-  const yearEl = document.getElementById("calYear");
-  const daysContainer = document.getElementById("calDays");
+      const monthEl = document.getElementById("calMonth");
+      const yearEl = document.getElementById("calYear");
+      const daysContainer = document.getElementById("calDays");
 
-  if (!monthEl || !yearEl || !daysContainer) return;
+      if (!monthEl || !yearEl || !daysContainer) return;
 
-  monthEl.textContent = monthNames[month];
-  yearEl.textContent = year;
+      monthEl.textContent = monthNames[month];
+      yearEl.textContent = year;
 
-  // Clear old days
-  daysContainer.innerHTML = "";
+      // Clear old days
+      daysContainer.innerHTML = "";
 
-  const firstDay = new Date(year, month, 1).getDay();   // 0 = Sunday
-  const lastDate = new Date(year, month + 1, 0).getDate();
+      const firstDay = new Date(year, month, 1).getDay();   // 0 = Sunday
+      const lastDate = new Date(year, month + 1, 0).getDate();
 
-  // Empty cells before day 1
-  for (let i = 0; i < firstDay; i++) {
-    const empty = document.createElement("span");
-    empty.className = "hero-calendar-day hero-calendar-day--empty";
-    daysContainer.appendChild(empty);
-  }
+      // Empty cells before day 1
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement("span");
+        empty.className = "hero-calendar-day hero-calendar-day--empty";
+        daysContainer.appendChild(empty);
+      }
 
-  // Actual days
-  for (let d = 1; d <= lastDate; d++) {
-    const dayEl = document.createElement("span");
-    dayEl.textContent = d;
-    dayEl.className = "hero-calendar-day";
-    if (d === today) {
-      dayEl.classList.add("hero-calendar-day--today");
+      // Actual days
+      for (let d = 1; d <= lastDate; d++) {
+        const dayEl = document.createElement("span");
+        dayEl.textContent = d;
+        dayEl.className = "hero-calendar-day";
+        if (d === today) {
+          dayEl.classList.add("hero-calendar-day--today");
+        }
+        daysContainer.appendChild(dayEl);
+      }
     }
-    daysContainer.appendChild(dayEl);
-  }
-}
 
-window.addEventListener("load", function () {
-  const preloader = document.getElementById("preloader");
-  if (preloader) {
-    preloader.classList.add("preloader--hide");
-  }
+    window.addEventListener("load", function () {
+      const preloader = document.getElementById("preloader");
+      if (preloader) {
+        preloader.classList.add("preloader--hide");
+      }
+      renderMiniCalendar();
 
-  renderMiniCalendar(); // build the calendar when page loads
-});
-
-// Set current year in footer
-document.getElementById("year").textContent = new Date().getFullYear();
-
-
-    <script>
-  // Mobile nav toggle – same on every page
-  (function () {
-    const navToggle = document.getElementById("navToggle");
-    const navLinks  = document.getElementById("navLinks");
-    if (!navToggle || !navLinks) return;
-
-    navToggle.addEventListener("click", () => {
-      navToggle.classList.toggle("is-open");
-      navLinks.classList.toggle("is-open");
+      // safety: hide preloader after 4s even if something weird happens
+      setTimeout(() => {
+        if (preloader) preloader.classList.add("preloader--hide");
+      }, 4000);
     });
 
-    navLinks.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => {
-        navToggle.classList.remove("is-open");
-        navLinks.classList.remove("is-open");
+    // Set current year in footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+  <!-- Mobile nav toggle -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const navToggle = document.querySelector('.nav-toggle');
+      const navLinks  = document.querySelector('.nav-links');
+
+      // On desktop navToggle might not exist – that’s fine
+      if (!navToggle || !navLinks) return;
+
+      navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('is-open');
+        navLinks.classList.toggle('is-open');
+      });
+
+      // Close menu when clicking a link
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navToggle.classList.remove('is-open');
+          navLinks.classList.remove('is-open');
+        });
       });
     });
-  })();
-</script>
+  </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
