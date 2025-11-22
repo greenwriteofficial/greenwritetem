@@ -513,9 +513,28 @@
     // Initial render
     renderCategories();
     renderProducts();
+    // Mobile nav toggle
+const navToggle = document.getElementById("navToggle");
+const navMenu = document.getElementById("navMenu");
+
+if (navToggle && navMenu) {
+  navToggle.addEventListener("click", () => {
+    navMenu.classList.toggle("nav-links--open");
+    navToggle.classList.toggle("nav-toggle--open");
+  });
+
+  // Optional: close menu when clicking a link
+  navMenu.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      navMenu.classList.remove("nav-links--open");
+      navToggle.classList.remove("nav-toggle--open");
+    });
+  });
+}
   </script>
 </body>
 </html>
+
 
 
 
