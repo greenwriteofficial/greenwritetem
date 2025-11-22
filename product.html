@@ -25,40 +25,39 @@
     a { text-decoration: none; color: inherit; }
     img { max-width: 100%; display: block; }
 
-    /* Hamburger button */
+    /* HAMBURGER BUTTON */
 .nav-toggle {
-  display: none; /* desktop hidden */
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0.35rem;
+  display: none;               /* shown only on mobile */
+  width: 30px;
+  height: 22px;
   margin-left: auto;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .nav-toggle span {
   display: block;
-  width: 20px;
+  width: 100%;
   height: 2px;
-  border-radius: 999px;
   background: #ffffff;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  border-radius: 999px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-.nav-toggle span + span {
-  margin-top: 4px;
+/* X animation when menu open */
+.nav-toggle.is-open span:nth-child(1) {
+  transform: translateY(10px) rotate(45deg);
 }
-
-/* "X" animation when open */
-.nav-toggle.nav-toggle--open span:nth-child(1) {
-  transform: translateY(6px) rotate(45deg);
-}
-
-.nav-toggle.nav-toggle--open span:nth-child(2) {
+.nav-toggle.is-open span:nth-child(2) {
   opacity: 0;
 }
-
-.nav-toggle.nav-toggle--open span:nth-child(3) {
-  transform: translateY(-6px) rotate(-45deg);
+.nav-toggle.is-open span:nth-child(3) {
+  transform: translateY(-10px) rotate(-45deg);
 }
 
 /* Mobile menu styles */
@@ -433,6 +432,7 @@ if (navToggle && navMenu) {
   </script>
 </body>
 </html>
+
 
 
 
