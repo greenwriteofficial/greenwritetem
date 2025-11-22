@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>GreenWrite — Sustainable Plantable Pens & Pencils</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="GreenWrite — eco-friendly plantable pens and pencils made from recycled paper." />
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --green: #4cd964;
+      --green-dark: #2bbf4a;
+      --cream: #fff8eb;
+      --navy: #050816;
+      --text-dark: #141414;
+      --text-muted: #4a4a4a;
+      --radius-lg: 1.5rem;
+      --shadow-soft: 0 14px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      color: var(--text-dark);
+      background: #ffffff;
+      line-height: 1.5;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* -------- PRELOADER (logo screen) -------- */
+
+    .preloader {
+      position: fixed;
+      inset: 0;
+      background: #0e1118;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.75rem;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .preloader--hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .preloader-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.8rem 1.3rem;
+      border-radius: 999px;
+      background: #ffffff;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .preloader-logo-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #ccff90, var(--green));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #0a0a0a;
+      font-size: 1.1rem;
+    }
+
+    .preloader-logo-text {
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: 0.03em;
+    }
+
+    .preloader-tagline {
+      font-size: 0.9rem;
+      color: #c5c5c5;
+    }
+
+    /* small pulsing dot */
+    .preloader-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-top: 0.2rem;
+      animation: pulse 1.2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.9); opacity: 0.5; }
+      50% { transform: scale(1.25); opacity: 1; }
+    }
+
+    /* -------- NAVBAR -------- */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(5, 8, 22, 0.96);
+      backdrop-filter: blur(16px);
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #ffffff;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #ccff90, var(--green));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0a0a0a;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a {
+      color: #f5f5f5;
+      opacity: 0.9;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.3rem;
+      border-radius: 999px;
+      background: #00c26f;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ffffff;
+      box-shadow: 0 12px 22px rgba(0, 194, 111, 0.4);
+    }
+
+    .nav-cta span {
+      font-size: 1rem;
+    }
+
+    /* -------- HERO SECTION -------- */
+
+    .hero {
+      background: var(--navy);
+      color: #ffffff;
+      padding: 4.5rem 1.5rem 4rem;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.75rem;
+      color: #a5ffce;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-title span {
+      color: #8af59c;
+    }
+
+    .hero-text {
+      font-size: 0.98rem;
+      max-width: 32rem;
+      color: #d3e0ff;
+      margin-bottom: 2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-primary,
+    .btn-ghost {
+      padding: 0.9rem 1.7rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      box-shadow: 0 18px 32px rgba(76, 217, 100, 0.45);
+      color: #053117;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 34px rgba(76, 217, 100, 0.55);
+      background: var(--green-dark);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #3a3f57;
+      color: #f6f6f6;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.04);
+      transform: translateY(-1px);
+    }
+
+    .hero-note {
+      font-size: 0.8rem;
+      color: #97a4d6;
+    }
+
+    .hero-note strong {
+      color: #e5ffb3;
+    }
+
+    .hero-image-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-card {
+      background: #fdfaf5;
+      border-radius: var(--radius-lg);
+      padding: 1.8rem 1.8rem 1.3rem;
+      box-shadow: var(--shadow-soft);
+      max-width: 340px;
+    }
+
+    .hero-card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #009944;
+      background: #e7ffe9;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      margin-bottom: 0.9rem;
+    }
+
+    .hero-card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .hero-card-sub {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-card-products {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      color: #73c27d;
+    }
+
+    .hero-pill {
+      padding: 0.3rem 0.8rem;
+      font-size: 0.75rem;
+      border-radius: 999px;
+      background: #f0ffe9;
+      border: 1px solid #d5f7c3;
+    }
+
+    .hero-card-footer {
+      font-size: 0.78rem;
+      color: #7d7d7d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-calendar {
+  width: 115px;
+  border-radius: 1.2rem;
+  background: #ffffff;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 0.75rem;
+  font-size: 0.68rem;
+  position: absolute;
+  bottom: -1rem;
+  right: 1rem;
+  box-shadow: 0 18px 35px rgba(0,0,0,0.25);
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* Month + Year */
+.hero-cal-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: #111;
+  margin-bottom: 0.2rem;
+}
+
+.hero-cal-header #calMonth {
+  color: #c20000;
+}
+
+/* Weekdays row */
+.hero-cal-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.55rem;
+  color: #999;
+  margin-bottom: 0.2rem;
+}
+
+/* Grid of days */
+.hero-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+/* Day style */
+.hero-calendar-day {
+  text-align: center;
+  padding: 2px 0;
+  border-radius: 6px;
+  font-size: 0.6rem;
+  color: #333;
+  transition: 0.2s ease;
+}
+
+.hero-calendar-day:hover {
+  background: #e8ffe8;
+  cursor: pointer;
+}
+
+/* Empty placeholder cells */
+.hero-calendar-day--empty {
+  visibility: hidden;
+}
+
+/* Today highlight */
+.hero-calendar-day--today {
+  background: #00c26f;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 194, 111, 0.5);
+}
+
+
+
+    /* -------- VALUE SECTION -------- */
+
+    .section {
+      padding: 4rem 1.5rem;
+    }
+
+    .section-green {
+      background: #8fe88c;
+      background: linear-gradient(135deg, #8fe88c 0%, #bbffb0 50%, #8fe88c 100%);
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.8rem;
+      color: #084b24;
+      margin-bottom: 0.7rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 3.4vw, 2.5rem);
+      font-weight: 700;
+      max-width: 32rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .section-subtitle {
+      max-width: 32rem;
+      font-size: 0.98rem;
+      color: #124019;
+      margin-bottom: 2rem;
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.8rem;
+    }
+
+    .value-card {
+      background: #ffffff;
+      border-radius: 1.6rem;
+      padding: 1.8rem 1.5rem;
+      box-shadow: 0 18px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .value-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 1.2rem;
+      border: 1px dashed #8fe88c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .value-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .value-text {
+      font-size: 0.92rem;
+      color: #4a4a4a;
+    }
+
+    /* -------- PRODUCTS SECTION -------- */
+
+    .section-cream {
+      background: var(--cream);
+    }
+
+    .section-title-wide {
+      max-width: none;
+    }
+
+    .products-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.4rem;
+    }
+
+    .product-card {
+      background: #ffffff;
+      border-radius: 1.4rem;
+      padding: 1.3rem 1.1rem;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.09);
+      font-size: 0.9rem;
+    }
+
+    .product-tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #0b9445;
+      margin-bottom: 0.35rem;
+    }
+
+    .product-title {
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .product-list {
+      list-style: none;
+      font-size: 0.86rem;
+      color: #5a5a5a;
+    }
+
+    .product-list li::before {
+      content: "• ";
+    }
+
+    .products-cta {
+      margin-top: 1.8rem;
+    }
+
+    /* -------- FOOTER -------- */
+
+    footer {
+      background: #2bbf4a;
+      color: #ffffff;
+      padding: 3rem 1.5rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr));
+      gap: 2rem;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-text {
+      font-size: 0.9rem;
+      max-width: 19rem;
+    }
+
+    .footer-heading {
+      font-weight: 600;
+      margin-bottom: 0.9rem;
+      font-size: 0.95rem;
+    }
+
+    .footer-links {
+      list-style: none;
+      font-size: 0.88rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .footer-links a {
+      color: #e8ffe9;
+      opacity: 0.95;
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 2rem auto 0;
+      font-size: 0.8rem;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .nav-cart {
+  position: relative;
+  margin-right: 0.4rem;
+  font-size: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-cart-count {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.5rem;
+  background: #ff4b5c;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 0 0.25rem;
+  font-size: 0.6rem;
+  font-weight: 600;
+  min-width: 14px;
+  text-align: center;
+  visibility: hidden; /* hidden when count is 0 */
+}
+
+
+    /* -------- RESPONSIVE -------- */
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-inner,
+      .products-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero {
+        padding-top: 3.5rem;
+      }
+
+      .hero-image-wrap {
+        order: -1;
+      }
+
+      .value-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .products-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .footer-inner {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .footer-inner {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero-inner {
+        gap: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader with logo (shows first) -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-logo">
+      <div class="preloader-logo-icon">GW</div>
+      <div class="preloader-logo-text">GreenWrite</div>
+    </div>
+    <div class="preloader-tagline">Plant. Write. Repeat.</div>
+    <div class="preloader-dot"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header>
+    <nav class="nav">
+      <div class="nav-left">
+        <div class="logo-icon">GW</div>
+        <div class="logo-text">GreenWrite</div>
+      </div>
+      <div class="nav-links">
+  <a href="index.html#about">About us</a>
+  <a href="impact.html">Our Impact</a>
+  <a href="products.html">Products</a>
+  <a href="index.html#contact">Contact</a>
+
+  <!-- Cart icon -->
+  <a href="cart.html" class="nav-cart">
+  🛒
+  <span id="cartCount" class="nav-cart-count">0</span>
+</a>
+
+  <a href="index.html#contact" class="nav-cta"><span>📞</span> Inquire Now</a>
+</div>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-kicker">Eco–friendly writing essentials</div>
+        <h1 class="hero-title">
+          THE FUTURE OF <span>SUSTAINABLE</span><br />
+          WRITING & GIFTING
+        </h1>
+        <p class="hero-text">
+          GreenWrite turns everyday pens and pencils into seed-filled, plantable
+          gifts. Write your story, then grow a little more green in the world
+          with every piece you use.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn-primary">
+            Our Gifting Solutions →
+          </button>
+          <button class="btn-ghost">
+            Speak to an expert 💬
+          </button>
+        </div>
+
+        <p class="hero-note">
+          <strong>Made in India</strong> with recycled paper, non-toxic ink and
+          plantable seed capsules.
+        </p>
+      </div>
+
+      <div class="hero-image-wrap" aria-hidden="true">
+        <!-- You can replace this card with a real product photo later -->
+        <div class="hero-card">
+          <div class="hero-card-badge">
+            🌱 Seed to Stationery
+          </div>
+          <div class="hero-card-title">Plantable Pen Kit</div>
+          <div class="hero-card-sub">
+            Includes pens, pencils and a mini grow guide — perfect for eco-friendly
+            corporate gifting.
+          </div>
+
+          <div class="hero-card-products">
+            <div class="hero-pill">100% recycled paper</div>
+            <div class="hero-pill">Herb & flower seeds</div>
+            <div class="hero-pill">Custom branding</div>
+          </div>
+
+          <div class="hero-card-footer">
+            <span>Greenwrite</span>
+            <span>Ships pan-India</span>
+          </div>
+        </div>
+
+        <div class="hero-calendar" id="miniCalendar">
+  <div class="hero-cal-header">
+    <span id="calMonth"></span>
+    <span id="calYear"></span>
+  </div>
+
+  <div class="hero-cal-week">
+    <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+  </div>
+
+  <div class="hero-cal-grid" id="calDays"></div>
+</div>
+  </section>
+
+  <!-- VALUE / ABOUT -->
+  <section class="section section-green" id="about">
+    <div class="section-inner">
+      <div class="section-kicker">Why GreenWrite</div>
+      <h2 class="section-title">
+        INNOVATORS IN PERSONALIZED AND THOUGHTFUL ECO-GIFTS
+      </h2>
+      <p class="section-subtitle">
+        We redesign everyday stationery into meaningful, zero-waste gifts.
+        From sourcing to packaging, every GreenWrite product is crafted to
+        leave a positive impact on people and the planet.
+      </p>
+
+      <div class="value-grid">
+        <article class="value-card">
+          <div class="value-icon">🍃</div>
+          <h3 class="value-title">Sustainable Materials & Transparency</h3>
+          <p class="value-text">
+            Made from recycled paper, soy-based inks and plant-based glues,
+            with clear disclosure on materials and sourcing.
+          </p>
+        </article>
+
+        <article class="value-card">
+          <div class="value-icon">✨</div>
+          <h3 class="value-title">Thoughtful Innovative Design</h3>
+          <p class="value-text">
+            Pens and pencils that sprout into herbs, flowers or vegetables,
+            blending playful design with practical sustainability.
+          </p>
+        </article>
+
+        <article class="value-card">
+          <div class="value-icon">🎁</div>
+          <h3 class="value-title">High-Quality, Personalised Experience</h3>
+          <p class="value-text">
+            Custom sleeves, messages and branding for events, schools and
+            businesses that want gifts people actually remember.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS / GIFTS -->
+  <section class="section section-cream" id="products">
+    <div class="section-inner products-layout">
+      <div>
+        <div class="section-kicker">Products & Gifts</div>
+        <h2 class="section-title section-title-wide">
+          EXPLORE OUR UNIQUE ECO-FRIENDLY WRITING INSTRUMENTS & GIFT SETS
+        </h2>
+        <p class="section-subtitle">
+          Whether you’re planning a school drive, festival stall or corporate
+          welcome hamper, GreenWrite has plantable products that make
+          sustainability feel simple and fun.
+        </p>
+        <div class="products-cta">
+          <a href="products.html" class="btn-primary">Browse all Products →</a>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <article class="product-card">
+          <div class="product-tag">Writing Instruments</div>
+          <div class="product-title">Plantable Pens & Pencils</div>
+          <ul class="product-list">
+            <li>Recycled paper barrels</li>
+            <li>Seed capsule at the end</li>
+            <li>Custom sleeves & branding</li>
+          </ul>
+        </article>
+
+        <article class="product-card">
+          <div class="product-tag">Gift Sets</div>
+          <div class="product-title">Eco Gift Boxes</div>
+          <ul class="product-list">
+            <li>Curated pen + pencil combos</li>
+            <li>Includes grow card & thank-you note</li>
+            <li>Perfect for events & festivals</li>
+          </ul>
+        </article>
+
+        <article class="product-card">
+          <div class="product-tag">Desk Essentials</div>
+          <div class="product-title">Notepads & Seed Cards</div>
+          <ul class="product-list">
+            <li>Recycled paper notepads</li>
+            <li>Plantable bookmark & seed cards</li>
+            <li>Branded for schools & offices</li>
+          </ul>
+        </article>
+
+        <article class="product-card">
+          <div class="product-tag">Custom Projects</div>
+          <div class="product-title">GreenWrite for Brands</div>
+          <ul class="product-list">
+            <li>Bulk customisation options</li>
+            <li>Co-branding & festival campaigns</li>
+            <li>Concept to delivery support</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">
+          <div class="logo-icon">GW</div>
+          <div class="logo-text">GreenWrite</div>
+        </div>
+        <p class="footer-text">
+          GreenWrite creates eco-friendly, plantable stationery that helps you
+          switch to greener choices without compromising on design or
+          usability.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="footer-heading">Navigation</h4>
+        <ul class="footer-links">
+          <li><a href="#about">About us</a></li>
+          <li><a href="impact.html">Our Impact</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#contact">FAQs (coming soon)</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="footer-heading">Solutions</h4>
+        <ul class="footer-links">
+          <li>Corporate Gifting</li>
+          <li>Schools & Colleges</li>
+          <li>Events & Festivals</li>
+          <li>Custom Eco Campaigns</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="footer-heading">Contact</h4>
+        <ul class="footer-links">
+          <li>Email: hello@greenwrite.in</li>
+          <li>Phone: +91-00000 00000</li>
+          <li>City: Your City, India</li>
+          <li>Instagram / WhatsApp links here</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © <span id="year"></span> GreenWrite. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="cart.js"></script>
+
+  <script>
+    // Hide preloader (logo screen) when page is ready
+   function renderMiniCalendar() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth(); // 0–11
+  const today = now.getDate();
+
+  const monthNames = [
+    "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+    "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+  ];
+
+  const monthEl = document.getElementById("calMonth");
+  const yearEl = document.getElementById("calYear");
+  const daysContainer = document.getElementById("calDays");
+
+  if (!monthEl || !yearEl || !daysContainer) return;
+
+  monthEl.textContent = monthNames[month];
+  yearEl.textContent = year;
+
+  // Clear old days
+  daysContainer.innerHTML = "";
+
+  const firstDay = new Date(year, month, 1).getDay();   // 0 = Sunday
+  const lastDate = new Date(year, month + 1, 0).getDate();
+
+  // Empty cells before day 1
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement("span");
+    empty.className = "hero-calendar-day hero-calendar-day--empty";
+    daysContainer.appendChild(empty);
+  }
+
+  // Actual days
+  for (let d = 1; d <= lastDate; d++) {
+    const dayEl = document.createElement("span");
+    dayEl.textContent = d;
+    dayEl.className = "hero-calendar-day";
+    if (d === today) {
+      dayEl.classList.add("hero-calendar-day--today");
+    }
+    daysContainer.appendChild(dayEl);
+  }
+}
+
+window.addEventListener("load", function () {
+  const preloader = document.getElementById("preloader");
+  if (preloader) {
+    preloader.classList.add("preloader--hide");
+  }
+
+  renderMiniCalendar(); // build the calendar when page loads
+});
+
+// Set current year in footer
+document.getElementById("year").textContent = new Date().getFullYear();
+
+
+    // Set current year in footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
