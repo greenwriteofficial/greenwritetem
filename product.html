@@ -234,7 +234,7 @@
     © <span id="year"></span> GreenWrite. All rights reserved.
   </footer>
 
-  <script src="products-data.js"></script>
+    <script src="products-data.js"></script>
   <script src="cart.js"></script>
 
   <script>
@@ -255,7 +255,7 @@
     const id = getQueryParam("id");
     const product = PRODUCTS.find(p => p.id === id);
 
-    // Grab all DOM elements
+    // Grab DOM elements
     const heroTitle      = document.getElementById("heroTitle");
     const heroBreadcrumb = document.getElementById("heroBreadcrumb");
     const imgEl          = document.getElementById("productImage");
@@ -268,7 +268,7 @@
     const addBtn         = document.getElementById("addToCartBtn");
 
     if (!product) {
-      // If wrong / missing id
+      // Wrong / missing id
       heroTitle.textContent = "Product not found";
       heroBreadcrumb.textContent = "Home › Shop";
       titleEl.textContent = "Product not found";
@@ -323,7 +323,7 @@
         priceEl.textContent = `₹${formatPrice(price)}`;
       }
 
-      // DESCRIPTION + META DETAILS
+      // DESCRIPTION + META
       descEl.textContent = product.description || product.short || "";
 
       metaEl.textContent = [
@@ -334,7 +334,7 @@
       // ADD TO CART
       addBtn.addEventListener("click", () => {
         const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
-        addToCart(product.id, qty);  // from cart.js
+        addToCart(product.id, qty);
         alert("Added to cart!");
       });
     }
