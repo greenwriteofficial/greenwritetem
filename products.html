@@ -460,15 +460,16 @@
       });
     }
 
-    function applySort(list) {
-      const items = [...list];
-      if (currentSort === "price-asc") {
-        items.sort((a,b) => a.price - b.price);
-      } else if (currentSort === "price-desc") {
-        items.sort((a,b) => b.price - a.price);
-      }
-      return items;
-    }
+   function applySort(list) {
+  const items = [...list];   // FIX: spread the list, not ".list"
+
+  if (currentSort === "price-asc") {
+    items.sort((a, b) => a.price - b.price);
+  } else if (currentSort === "price-desc") {
+    items.sort((a, b) => b.price - a.price);
+  }
+  return items;
+}
 
     function renderProducts() {
       const filtered = applySort(getFilteredProducts());
@@ -541,6 +542,7 @@
   </script>
 </body>
 </html>
+
 
 
 
