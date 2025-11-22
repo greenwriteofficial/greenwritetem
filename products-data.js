@@ -21,10 +21,11 @@ const PRODUCTS = [
     mrp: 20,
     category: "Writing Instruments",
     tagLabel: "WRITING INSTRUMENTS",
-    image: "images/eco-pencil-pack.jpg",
+    image: "eco-pencil-pack.jpg",
     short: "10 plantable pencils with mixed seeds.",
     description: "Set of 10 plantable pencils with different seed types. Perfect for students and workshops.",
     badge: "Popular"
   },
 
 ] 
+
