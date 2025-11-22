@@ -1088,15 +1088,17 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
     // Set current year in footer
     document.getElementById("year").textContent = new Date().getFullYear();
-    // Mobile nav toggle
-const navToggle = document.getElementById("navToggle");
-const navMenu = document.getElementById("navMenu");
+   <script>
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks  = document.getElementById('navLinks');
 
-if (navToggle && navMenu) {
-  navToggle.addEventListener("click", () => {
-    navMenu.classList.toggle("nav-links--open");
-    navToggle.classList.toggle("nav-toggle--open");
-  });
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('is-open');
+      navLinks.classList.toggle('is-open');
+    });
+  }
 
   // Optional: close menu when clicking a link
   navMenu.querySelectorAll("a").forEach(link => {
@@ -1109,6 +1111,7 @@ if (navToggle && navMenu) {
   </script>
 </body>
 </html>
+
 
 
 
