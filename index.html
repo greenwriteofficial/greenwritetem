@@ -697,29 +697,29 @@
     <div class="preloader-dot"></div>
   </div>
 
-  <!-- NAVBAR -->
   <header>
-    <nav class="nav">
-      <div class="nav-left">
-        <div class="logo-icon">GW</div>
-        <div class="logo-text">GreenWrite</div>
-      </div>
-      <div class="nav-links">
-  <a href="index.html#about">About us</a>
-  <a href="impact.html">Our Impact</a>
-  <a href="products.html">Products</a>
-  <a href="index.html#contact">Contact</a>
+  <nav class="nav">
+    <div class="nav-left">
+      <div class="logo-icon">GW</div>
+      <div class="logo-text">GreenWrite</div>
+    </div>
 
-  <!-- Cart icon -->
-  <a href="cart.html" class="nav-cart">
-  🛒
-  <span id="cartCount" class="nav-cart-count">0</span>
-</a>
+    <!-- HAMBURGER BUTTON (mobile only) -->
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
 
-  <a href="index.html#contact" class="nav-cta"><span>📞</span> Inquire Now</a>
-</div>
-    </nav>
-  </header>
+    <div class="nav-links" id="navMenu">
+      <a href="index.html#about">About us</a>
+      <a href="impact.html">Our Impact</a>
+      <a href="products.html">Products</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="index.html#contact" class="nav-cta"><span>📞</span> Inquire Now</a>
+    </div>
+  </nav>
+</header>
 
   <!-- HERO -->
   <section class="hero">
@@ -1013,3 +1013,4 @@ document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
+
