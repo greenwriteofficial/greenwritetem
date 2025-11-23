@@ -5,311 +5,623 @@
   <title>GreenWrite — Cart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --green: #4cd964;
       --green-dark: #2bbf4a;
       --navy: #050816;
-      --text-muted: #6b7280;
-      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.20);
+      --text-dark: #141414;
+      --text-muted: #4a4a4a;
+      --shadow-soft: 0 14px 30px rgba(0, 0, 0, 0.18);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: "Poppins", sans-serif;
-      background:#f5f7fb;
-      color:#111827;
-      line-height:1.5;
+      color: var(--text-dark);
+      background: #f5f7fb;
+      line-height: 1.5;
     }
-    a { text-decoration:none; color:inherit; }
 
-    /* NAVBAR (same style as product) */
+    a { text-decoration:none; color:inherit; }
+    img { max-width:100%; display:block; }
+
+    /* NAVBAR -------------------------------------------------- */
+
     header {
-      position:sticky;
-      top:0;
-      z-index:40;
-      background:rgba(5,8,22,0.96);
-      color:#fff;
-      backdrop-filter:blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(5, 8, 22, 0.96);
+      backdrop-filter: blur(16px);
     }
     .nav {
-      max-width:1200px;
-      margin:0 auto;
-      padding:.85rem 1.5rem;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #ffffff;
     }
+    .nav-left { display:flex;align-items:center;gap:0.6rem; }
     .logo-icon {
-      width:36px;height:36px;border-radius:999px;
+      width:36px;height:36px;border-radius:50%;
       background:radial-gradient(circle at 30% 20%,#ccff90,var(--green));
       display:flex;align-items:center;justify-content:center;
-      font-weight:700;font-size:1.1rem;color:#020617;
+      font-size:1.1rem;font-weight:700;color:#0a0a0a;
     }
     .logo-text {
-      font-weight:700;
-      letter-spacing:.06em;
+      font-weight:700;font-size:1.2rem;letter-spacing:0.06em;
       text-transform:uppercase;
-      font-size:1.15rem;
-      margin-left:.6rem;
     }
-    .nav-left { display:flex;align-items:center; }
-    .nav-links {
-      display:flex;align-items:center;gap:1.6rem;font-size:.95rem;
-    }
-    .nav-links a { color:#e5e7eb;opacity:.92; }
+    .nav-links { display:flex;align-items:center;gap:1.8rem;font-size:0.95rem; }
+    .nav-links a { color:#f5f5f5;opacity:0.9; }
     .nav-links a:hover { opacity:1; }
+
     .nav-cta {
-      display:inline-flex;align-items:center;gap:.4rem;
-      padding:.55rem 1.3rem;border-radius:999px;
-      background:#00c26f;font-size:.9rem;font-weight:600;color:#fff;
-      box-shadow:0 12px 24px rgba(34,197,94,.4);
-    }
-    .nav-cart-link{position:relative;font-size:1.2rem;}
-    .nav-cart-count{
-      position:absolute;top:-.45rem;right:-.55rem;
-      background:#22c55e;color:#020617;font-size:.65rem;
-      min-width:1.1rem;height:1.1rem;border-radius:999px;
-      display:flex;align-items:center;justify-content:center;
-      font-weight:600;border:2px solid #020617;
+      display:inline-flex;align-items:center;gap:0.4rem;
+      padding:0.55rem 1.3rem;border-radius:999px;
+      background:#00c26f;font-size:0.9rem;font-weight:600;
+      color:#ffffff;box-shadow:0 12px 22px rgba(0,194,111,0.4);
     }
 
-    /* Layout */
-    main{
-      max-width:1200px;
-      margin:2rem auto 3rem;
-      padding:0 1.5rem;
+    .nav-cart {
+      position: relative;
+      margin-right: 0.4rem;
+      font-size: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
-    h1{
-      font-size:1.7rem;
-      font-weight:700;
-      margin-bottom:1.5rem;
-    }
-    .cart-layout{
-      display:grid;
-      grid-template-columns:minmax(0,1.4fr) minmax(0,0.9fr);
-      gap:1.8rem;
-    }
-    .card{
-      background:#fff;
-      border-radius:1.4rem;
-      box-shadow:var(--shadow-soft);
-      padding:1.4rem 1.5rem;
+    .nav-cart-count {
+      position: absolute;
+      top: -0.4rem;
+      right: -0.5rem;
+      background: #ff4b5c;
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 0 0.25rem;
+      font-size: 0.6rem;
+      font-weight: 600;
+      min-width: 14px;
+      text-align: center;
+      visibility: hidden;
     }
 
-    .pincode-row{
+    /* PAGE LAYOUT --------------------------------------------- */
+
+    .cart-page {
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .cart-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+      gap: 1.8rem;
+      align-items: flex-start;
+    }
+    .cart-heading {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    /* DELIVERY BAR -------------------------------------------- */
+
+    .cart-address-bar {
+      background:#ffffff;
+      border-radius:1.2rem;
+      box-shadow:0 8px 18px rgba(0,0,0,0.06);
+      padding:1rem 1.3rem;
+      margin-bottom:1rem;
       display:flex;
       align-items:center;
-      gap:1rem;
-      margin-top:.6rem;
-    }
-    .pincode-input{
-      flex:0 0 140px;
-      border-radius:999px;
-      border:1px solid #d1d5db;
-      padding:.45rem .9rem;
-      outline:none;
-      font:inherit;
-    }
-    .pincode-input:focus{
-      border-color:#22c55e;
-      box-shadow:0 0 0 1px rgba(34,197,94,.25);
-    }
-    .btn-small{
-      padding:.5rem 1.1rem;
-      border-radius:999px;
-      border:none;
-      background:var(--green);
-      color:#022c22;
-      font-size:.85rem;
-      font-weight:600;
-      cursor:pointer;
-    }
-
-    /* Cart item rows */
-    .cart-items-card{ margin-top:1.5rem; }
-    .cart-item-row{
-      border-bottom:1px solid #e5e7eb;
-      padding:1rem 0;
-    }
-    .cart-item-row:last-child{ border-bottom:none; }
-    .cart-item-main{
-      display:flex;
-      gap:1rem;
-    }
-    .cart-item-main img{
-      width:90px;height:90px;border-radius:.9rem;
-      object-fit:cover;background:#f9fafb;
-    }
-    .cart-item-info{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      gap:.2rem;
-    }
-    .cart-item-name{font-weight:600;font-size:.98rem;}
-    .cart-item-short{font-size:.85rem;color:var(--text-muted);}
-    .cart-item-price{font-size:.95rem;margin-top:.2rem;}
-    .cart-item-mrp{margin-left:.4rem;font-size:.85rem;color:#9ca3af;text-decoration:line-through;}
-    .cart-item-actions{
-      display:flex;
-      align-items:center;
-      gap:.4rem;
-      margin-top:.6rem;
-    }
-    .qty-btn{
-      width:26px;height:26px;border-radius:999px;
-      border:1px solid #d1d5db;background:#f9fafb;
-      display:flex;align-items:center;justify-content:center;
-      cursor:pointer;font-size:1rem;
-    }
-    .cart-item-actions .qty-input{
-      width:52px;border-radius:999px;border:1px solid #d1d5db;
-      padding:.2rem .5rem;text-align:center;font-size:.85rem;
-      outline:none;
-    }
-    .remove-btn{
-      margin-left:auto;
-      font-size:.8rem;
-      border:none;
-      background:none;
-      color:#ef4444;
-      cursor:pointer;
-    }
-
-    .cart-empty{
-      text-align:center;
-      padding:1.5rem .5rem;
-      font-size:.95rem;
-      color:var(--text-muted);
-    }
-
-    /* Summary card */
-    .summary-heading{font-weight:600;margin-bottom:1rem;font-size:.98rem;}
-    .summary-row{
-      display:flex;
       justify-content:space-between;
-      font-size:.9rem;
-      padding:.4rem 0;
+      gap:1rem;
     }
-    .summary-row.total{
-      border-top:1px dashed #d1d5db;
-      margin-top:.4rem;
-      padding-top:.8rem;
+    .cart-address-label {
+      font-size:0.85rem;
       font-weight:600;
+      color:#555;
+      margin-bottom:0.1rem;
+    }
+    .cart-address-text {
+      font-size:0.85rem;
+      color:#666;
+    }
+    .cart-address-input-wrap {
+      display:flex;
+      gap:0.4rem;
+      align-items:center;
+    }
+    #pincodeInput {
+      width:90px;
+      border-radius:999px;
+      border:1px solid #dde3ef;
+      padding:0.4rem 0.7rem;
+      font-size:0.85rem;
+      outline:none;
+      text-align:center;
+    }
+    #pincodeBtn {
+      border-radius:999px;
+      border:none;
+      padding:0.4rem 0.9rem;
+      font-size:0.85rem;
+      font-weight:600;
+      cursor:pointer;
+      background:#00c26f;
+      color:#ffffff;
+    }
+
+    /* LEFT ITEMS ---------------------------------------------- */
+
+    .cart-items-card {
+      background:#ffffff;
+      border-radius: 1.2rem;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.09);
+      overflow: hidden;
+    }
+    .cart-items-header {
+      padding: 1.1rem 1.3rem;
+      border-bottom: 1px solid #edf0f7;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .cart-items-body {
+      max-height: 65vh;
+      overflow-y: auto;
+    }
+
+    .cart-item-row {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+      gap: 1rem;
+      padding: 1.1rem 1.3rem;
+      border-bottom: 1px solid #f2f3f8;
+    }
+    .cart-item-row:last-child { border-bottom:none; }
+
+    .cart-item-imgwrap {
+      width: 100%;
+      border-radius: 0.8rem;
+      overflow: hidden;
+      background: #f3f5fa;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .cart-item-main-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.1rem;
+    }
+    .cart-item-meta {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 0.2rem;
+    }
+    .cart-item-seller {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 0.4rem;
+    }
+
+    .cart-item-price-row {
+      display:flex;
+      gap:0.6rem;
+      align-items:baseline;
+      margin-bottom:0.4rem;
+      font-size:0.95rem;
+    }
+    .cart-item-price-current {
+      font-weight:600;
+      font-size:1.05rem;
+    }
+    .cart-item-price-old {
+      font-size:0.85rem;
+      text-decoration: line-through;
+      color:#9a9a9a;
+    }
+    .cart-item-price-off {
+      font-size:0.8rem;
+      color:#059b52;
+      font-weight:600;
+    }
+
+    .cart-item-actions-row {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:0.4rem;
+      font-size:0.85rem;
+    }
+    .qty-control {
+      display:flex;
+      align-items:center;
+      gap:0.4rem;
+    }
+    .qty-btn {
+      width:26px;height:26px;
+      border-radius:999px;
+      border:1px solid #dde2f0;
+      background:#ffffff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
       font-size:1rem;
     }
-    .summary-save{
-      margin-top:.6rem;
-      font-size:.85rem;
-      color:#16a34a;
-    }
-    .place-order-btn{
-      margin-top:1.1rem;
-      width:100%;
-      padding:.85rem 1.2rem;
+    .qty-value {
+      min-width:32px;
+      text-align:center;
       border-radius:999px;
-      border:none;
-      background:#fb923c;
-      color:#fff7ed;
-      font-weight:600;
-      cursor:pointer;
-      font-size:.95rem;
-      box-shadow:0 16px 30px rgba(248,148,65,.45);
-    }
-    .summary-footer{
-      margin-top:1rem;
-      font-size:.78rem;
-      color:var(--text-muted);
+      border:1px solid #dde2f0;
+      padding:0.15rem 0.4rem;
+      font-size:0.85rem;
     }
 
-    @media (max-width:900px){
-      .cart-layout{
-        grid-template-columns:minmax(0,1fr);
+    .cart-item-links {
+      display:flex;
+      gap:1rem;
+      font-size:0.82rem;
+      text-transform:uppercase;
+      letter-spacing:0.08em;
+    }
+    .cart-item-link {
+      cursor:pointer;
+      font-weight:600;
+      color:#0b5ed7;
+    }
+    .cart-item-link.remove { color:#d12b35; }
+
+    .cart-empty {
+      padding: 2.5rem 1.3rem 2.8rem;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    /* RIGHT SUMMARY ------------------------------------------- */
+
+    aside {
+      position: sticky;
+      top: 4.5rem;
+    }
+    .cart-summary-card {
+      background:#ffffff;
+      border-radius:1.2rem;
+      box-shadow:0 10px 24px rgba(0,0,0,0.09);
+      padding:1.2rem 1.4rem 1.5rem;
+      font-size:0.9rem;
+    }
+    .cart-summary-title {
+      font-weight:600;
+      margin-bottom:0.8rem;
+    }
+    .cart-summary-row {
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:0.5rem;
+    }
+    .cart-summary-row.bold {
+      font-weight:600;
+      border-top:1px dashed #e1e4f0;
+      padding-top:0.7rem;
+      margin-top:0.4rem;
+    }
+    .cart-summary-savings {
+      font-size:0.85rem;
+      color:#059b52;
+      margin:0.7rem 0 1rem;
+    }
+    .cart-placeorder-btn {
+      width:100%;
+      border:none;
+      border-radius:999px;
+      background:#ff7a1a;
+      color:#ffffff;
+      padding:0.7rem 1rem;
+      font-size:0.95rem;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:0 16px 28px rgba(255,122,26,0.4);
+      margin-bottom:0.7rem;
+    }
+    .cart-summary-note {
+      font-size:0.8rem;
+      color:#777;
+    }
+
+    /* RESPONSIVE ---------------------------------------------- */
+
+    @media (max-width: 900px) {
+      .cart-inner {
+        grid-template-columns: minmax(0, 1fr);
       }
+      aside {
+        position: static;
+      }
+      .nav-links { display:none; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <nav class="nav">
-      <div class="nav-left">
-        <a href="index.html" class="logo-icon">GW</a>
-        <a href="index.html" class="logo-text">GreenWrite</a>
-      </div>
-      <div class="nav-links">
-        <a href="index.html#about">About us</a>
-        <a href="impact.html">Our Impact</a>
-        <a href="products.html">Products</a>
-        <a href="index.html#contact">Contact</a>
-        <a href="cart.html" class="nav-cart-link">
-          🛒 <span id="cartCount" class="nav-cart-count">0</span>
-        </a>
-        <a href="index.html#contact" class="nav-cta"><span>📞</span> Inquire Now</a>
-      </div>
-    </nav>
-  </header>
 
-  <main>
-    <h1>My Cart</h1>
+<header>
+  <nav class="nav">
+    <div class="nav-left">
+      <a href="index.html" style="display:flex;align-items:center;gap:0.6rem;">
+        <div class="logo-icon">GW</div>
+        <div class="logo-text">GreenWrite</div>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="index.html#about">About us</a>
+      <a href="impact.html">Our Impact</a>
+      <a href="products.html">Products</a>
+      <a href="index.html#contact">Contact</a>
 
-    <div class="cart-layout">
-      <!-- LEFT: address + items -->
-      <div>
-        <!-- Pincode card -->
-        <div class="card">
-          <div style="font-size:.9rem;font-weight:600;margin-bottom:.25rem;">Deliver to</div>
-          <div style="font-size:.85rem;color:var(--text-muted);">
+      <a href="cart.html" class="nav-cart">
+        🛒
+        <span id="cartCount" class="nav-cart-count">0</span>
+      </a>
+
+      <a href="index.html#contact" class="nav-cta"><span>📞</span> Inquire Now</a>
+    </div>
+  </nav>
+</header>
+
+<main class="cart-page">
+  <div class="cart-inner">
+    <!-- LEFT -->
+    <section>
+      <h1 class="cart-heading">My Cart</h1>
+
+      <div class="cart-address-bar">
+        <div>
+          <div class="cart-address-label">Deliver to</div>
+          <div id="cartAddressText" class="cart-address-text">
             Enter your pincode to check delivery time & charges.
           </div>
-          <div class="pincode-row">
-            <input id="pincodeInput" class="pincode-input" placeholder="Pincode" maxlength="6">
-            <button id="checkPincodeBtn" class="btn-small">Check</button>
-          </div>
         </div>
-
-        <!-- Items card -->
-        <div class="card cart-items-card" id="cartItemsContainer">
-          <!-- JS will inject items here -->
-        </div>
-
-        <!-- From GreenWrite card -->
-        <div class="card" style="margin-top:1.5rem;font-size:.9rem;font-weight:600;">
-          From GreenWrite
+        <div class="cart-address-input-wrap">
+          <input type="text" id="pincodeInput" maxlength="6" placeholder="Pincode" />
+          <button id="pincodeBtn">Check</button>
         </div>
       </div>
 
-      <!-- RIGHT: Summary -->
-      <aside class="card">
-        <div class="summary-heading">PRICE DETAILS</div>
-        <div class="summary-row">
-          <span id="summaryItemsLabel">Price (0 item)</span>
-          <span id="summaryPrice">₹0</span>
+      <div class="cart-items-card">
+        <div class="cart-items-header">From GreenWrite</div>
+        <div id="cartItemsContainer" class="cart-items-body"></div>
+      </div>
+    </section>
+
+    <!-- RIGHT -->
+    <aside>
+      <div class="cart-summary-card">
+        <div class="cart-summary-title">PRICE DETAILS</div>
+
+        <div class="cart-summary-row">
+          <span>Price (<span id="summaryItemsCount">0</span> item)</span>
+          <span>₹<span id="summaryMrp">0</span></span>
         </div>
-        <div class="summary-row">
+        <div class="cart-summary-row">
           <span>Discount</span>
-          <span id="summaryDiscount">- ₹0</span>
+          <span style="color:#059b52;">- ₹<span id="summaryDiscount">0</span></span>
         </div>
-        <div class="summary-row">
+        <div class="cart-summary-row">
           <span>Delivery</span>
-          <span id="summaryDelivery">Enter pincode</span>
+          <span id="summaryDeliveryText">Enter pincode</span>
         </div>
-        <div class="summary-row total">
+
+        <div class="cart-summary-row bold">
           <span>Total Amount</span>
-          <span id="summaryTotal">₹0</span>
+          <span>₹<span id="summaryTotal">0</span></span>
         </div>
-        <div id="summarySavings" class="summary-save">
+
+        <div class="cart-summary-savings" id="summarySavingsText">
           You will save ₹0 on this order
         </div>
-        <button class="place-order-btn">PLACE ORDER</button>
-        <div class="summary-footer">
+
+        <button class="cart-placeorder-btn" onclick="alert('Demo only – connect real payment later.')">
+          Place Order
+        </button>
+
+        <div class="cart-summary-note">
           Safe and secure payments. Easy returns. 100% eco-friendly products by GreenWrite.
         </div>
-      </aside>
-    </div>
-  </main>
+      </div>
+    </aside>
+  </div>
+</main>
 
-  <script src="products-data.js"></script>
-  <script src="cart.js"></script>
+<script src="products-data.js"></script>
+<script src="cart.js"></script>
+<script>
+  const cartItemsContainer = document.getElementById("cartItemsContainer");
+  const itemsCountEl       = document.getElementById("summaryItemsCount");
+  const mrpEl              = document.getElementById("summaryMrp");
+  const discountEl         = document.getElementById("summaryDiscount");
+  const totalEl            = document.getElementById("summaryTotal");
+  const savingsTextEl      = document.getElementById("summarySavingsText");
+  const deliveryTextEl     = document.getElementById("summaryDeliveryText");
+  const addressTextEl      = document.getElementById("cartAddressText");
+  const pincodeInput       = document.getElementById("pincodeInput");
+  const pincodeBtn         = document.getElementById("pincodeBtn");
+
+  let currentShippingCharge = 0;
+
+  function formatPrice(num) {
+    return num.toLocaleString("en-IN");
+  }
+
+  function calculateShipping(pin) {
+    if (!/^\d{6}$/.test(pin)) {
+      return { charge: 0, eta: "", message: "Please enter a valid 6-digit pincode." };
+    }
+
+    const prefix = pin.slice(0, 2);
+    let charge, eta;
+
+    if (["11", "12", "13"].includes(prefix)) {
+      charge = 30;
+      eta = "2–4 days";
+    } else if (["40", "41", "42", "56", "57"].includes(prefix)) {
+      charge = 40;
+      eta = "4–7 days";
+    } else {
+      charge = 60;
+      eta = "5–9 days";
+    }
+
+    return {
+      charge,
+      eta,
+      message: charge === 0 ? "FREE delivery" : `₹${charge} • Estimated ${eta}`,
+    };
+  }
+
+  function renderCart() {
+    const cart = getCart();
+    cartItemsContainer.innerHTML = "";
+
+    if (!cart.length) {
+      cartItemsContainer.innerHTML =
+        `<div class="cart-empty">Your cart is empty. Add some GreenWrite products! 🌱</div>`;
+      itemsCountEl.textContent = 0;
+      mrpEl.textContent = "0";
+      discountEl.textContent = "0";
+      totalEl.textContent = "0";
+      deliveryTextEl.textContent = "Enter pincode";
+      savingsTextEl.textContent = "You will save ₹0 on this order";
+      return;
+    }
+
+    let totalItems = 0;
+    let totalPrice = 0;
+    let totalMrp   = 0;
+
+    cart.forEach(item => {
+      const product = PRODUCTS.find(p => p.id === item.id);
+      if (!product) return;
+
+      const qty = item.qty || 1;
+      totalItems += qty;
+
+      const price    = product.price;
+      const mrp      = product.mrp || price;
+      const lineTotal = price * qty;
+      const lineMrp   = mrp * qty;
+      totalPrice += lineTotal;
+      totalMrp   += lineMrp;
+
+      const offPercent = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+
+      const row = document.createElement("div");
+      row.className = "cart-item-row";
+      row.innerHTML = `
+        <div class="cart-item-imgwrap">
+          ${product.image ? `<img src="${product.image}" alt="${product.name}">` : ""}
+        </div>
+        <div>
+          <div class="cart-item-main-title">${product.name}</div>
+          <div class="cart-item-meta">${product.category || ""}</div>
+          <div class="cart-item-seller">Seller: GreenWrite</div>
+
+          <div class="cart-item-price-row">
+            <span class="cart-item-price-current">₹${formatPrice(price)}</span>
+            ${mrp > price ? `<span class="cart-item-price-old">₹${formatPrice(mrp)}</span>` : ""}
+            ${offPercent > 0 ? `<span class="cart-item-price-off">${offPercent}% Off</span>` : ""}
+          </div>
+
+          <div class="cart-item-actions-row">
+            <div class="qty-control">
+              <button class="qty-btn" data-action="dec" data-id="${product.id}">−</button>
+              <div class="qty-value" data-id="${product.id}">${qty}</div>
+              <button class="qty-btn" data-action="inc" data-id="${product.id}">+</button>
+            </div>
+
+            <div class="cart-item-links">
+              <span class="cart-item-link remove" data-action="remove" data-id="${product.id}">
+                REMOVE
+              </span>
+            </div>
+          </div>
+        </div>
+      `;
+      cartItemsContainer.appendChild(row);
+    });
+
+    const totalDiscount = totalMrp - totalPrice;
+    const grandTotal    = totalPrice + currentShippingCharge;
+
+    itemsCountEl.textContent = totalItems;
+    mrpEl.textContent        = formatPrice(totalMrp);
+    discountEl.textContent   = formatPrice(totalDiscount > 0 ? totalDiscount : 0);
+    totalEl.textContent      = formatPrice(grandTotal);
+    savingsTextEl.textContent =
+      `You will save ₹${formatPrice(totalDiscount > 0 ? totalDiscount : 0)} on this order`;
+  }
+
+  // qty / remove click handling
+  cartItemsContainer.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-action]");
+    if (!btn) return;
+
+    const action = btn.getAttribute("data-action");
+    const id     = btn.getAttribute("data-id");
+
+    if (action === "inc") {
+      const cart = getCart();
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty = (item.qty || 1) + 1;
+        saveCart(cart);
+        updateCartCount();
+        renderCart();
+      }
+    } else if (action === "dec") {
+      const cart = getCart();
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty = Math.max(1, (item.qty || 1) - 1);
+        saveCart(cart);
+        updateCartCount();
+        renderCart();
+      }
+    } else if (action === "remove") {
+      removeFromCart(id);
+      renderCart();
+    }
+  });
+
+  // Pincode check
+  pincodeBtn.addEventListener("click", () => {
+    const pin = pincodeInput.value.trim();
+    const { charge, eta, message } = calculateShipping(pin);
+
+    currentShippingCharge = charge;
+
+    if (!pin || !/^\d{6}$/.test(pin)) {
+      addressTextEl.textContent = "Please enter a valid 6-digit pincode.";
+      deliveryTextEl.textContent = "Enter pincode";
+    } else {
+      addressTextEl.textContent = `Delivering to ${pin} • ${eta || ""}`.trim();
+      deliveryTextEl.textContent = charge === 0 ? "FREE" : `₹${charge}`;
+    }
+
+    renderCart();
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderCart();
+  });
+</script>
 </body>
 </html>
