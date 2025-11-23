@@ -24,3 +24,7 @@ const PRODUCTS = [
     badge: "Popular"
   }
 ];
+
+
+window.PRODUCTS = PRODUCTS;
+
