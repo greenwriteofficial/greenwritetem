@@ -118,28 +118,35 @@ function renderCart() {
     totalPrice += linePrice;
     totalQty += item.qty;
 
-    const row = document.createElement("div");
-    row.className = "cart-item-row";
-    row.innerHTML = `
-      <div class="cart-item-main">
-        <img src="${product.images}" alt="${product.name}">
-        <div class="cart-item-info">
-          <div class="cart-item-name">${product.name}</div>
-          <div class="cart-item-short">${product.short || ""}</div>
-          <div class="cart-item-price">
-            <span>₹${product.price}</span>
-            ${mrp > product.price ? `<span class="cart-item-mrp">₹${mrp}</span>` : ""}
-          </div>
-          <div class="cart-item-actions">
-            <button class="qty-btn" data-action="minus" data-id="${product.id}">−</button>
-            <input class="qty-input" data-id="${product.id}" type="number" min="1" value="${item.qty}">
-            <button class="qty-btn" data-action="plus" data-id="${product.id}">+</button>
-            <button class="remove-btn" data-id="${product.id}">Remove</button>
-          </div>
-        </div>
+    const product = PRODUCTS.find((p) => p.id === item.id);
+if (!product) return;
+
+// choose a safe image path
+const imageSrc =
+  product.images || product.image || "images/plantable-pen-kit.jpg";
+
+const row = document.createElement("div");
+row.className = "cart-item-row";
+row.innerHTML = `
+  <div class="cart-item-main">
+    <img src="${imageSrc}" alt="${product.name}">
+    <div class="cart-item-info">
+      <div class="cart-item-name">${product.name}</div>
+      <div class="cart-item-short">${product.short || ""}</div>
+      <div class="cart-item-price">
+        <span>₹${product.price}</span>
+        ${mrp > product.price ? `<span class="cart-item-mrp">₹${mrp}</span>` : ""}
       </div>
-    `;
-    itemsContainer.appendChild(row);
+      <div class="cart-item-actions">
+        <button class="qty-btn" data-action="minus" data-id="${product.id}">−</button>
+        <input class="qty-input" data-id="${product.id}" type="number" min="1" value="${item.qty}">
+        <button class="qty-btn" data-action="plus" data-id="${product.id}">+</button>
+        <button class="remove-btn" data-id="${product.id}">Remove</button>
+      </div>
+    </div>
+  </div>
+`;
+itemsContainer.appendChild(row);
   });
 
   const discount = totalMrp - totalPrice;
@@ -213,3 +220,4 @@ document.addEventListener("DOMContentLoaded", function () {
     renderCart();
   }
 });
+
