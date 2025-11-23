@@ -6,7 +6,7 @@ const PRODUCTS = [
     mrp: 25,
     category: "Writing Instruments",
     tagLabel: "WRITING INSTRUMENTS",
-    image: "images/plantable-pen-kit.jpg",   
+    images: "images/plantable-pen-kit.jpg",   
     short: "Eco-friendly pen set with seed capsules at the end.",
     description: "A set of plantable pens made from recycled paper. Once the ink finishes, plant the end in soil to grow herbs or flowers.",
     badge: "Best seller"
@@ -18,7 +18,7 @@ const PRODUCTS = [
     mrp: 20,
     category: "Writing Instruments",
     tagLabel: "WRITING INSTRUMENTS",
-    image: "images/eco-pencil-pack.jpg",    
+    images: "images/eco-pencil-pack.jpg",    
     short: "10 plantable pencils with mixed seeds.",
     description: "Set of 10 plantable pencils with different seed types. Perfect for students and workshops.",
     badge: "Popular"
@@ -27,4 +27,5 @@ const PRODUCTS = [
 
 
 window.PRODUCTS = PRODUCTS;
+
 
