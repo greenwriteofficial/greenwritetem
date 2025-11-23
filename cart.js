@@ -1,21 +1,11 @@
 /* cart.js
-   Shared cart logic for all pages
-   - Uses localStorage key "greenwrite_cart"
-   - Renders cart.html
+   - Single source of truth for cart data
+   - Used on ALL pages (index, products, product, cart)
 */
 
 const CART_KEY = "greenwrite_cart";
-let CART_TOTALS = {
-  totalMrp: 0,
-  totalPrice: 0,
-  discount: 0,
-  deliveryCharge: 0,
-  grandTotal: 0,
-  totalQty: 0,
-};
 
-// ---------- basic helpers ----------
-
+// ---- helpers ----
 function loadCart() {
   try {
     const raw = localStorage.getItem(CART_KEY);
@@ -36,7 +26,7 @@ function saveCart(cart) {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
 
-/** Add product from product.html */
+/** Add product to cart (used on product page etc.) */
 function addToCart(productId, qty = 1) {
   const cart = loadCart();
   const existing = cart.find((item) => item.id === productId);
@@ -52,7 +42,7 @@ function addToCart(productId, qty = 1) {
   updateCartBadge();
 }
 
-/** Update quantity from cart page */
+/** Change quantity on cart page */
 function setCartQuantity(productId, qty) {
   const cart = loadCart();
   const item = cart.find((i) => i.id === productId);
@@ -65,7 +55,7 @@ function setCartQuantity(productId, qty) {
   updateCartBadge();
 }
 
-/** Remove item from cart */
+/** Remove a product from cart */
 function removeFromCart(productId) {
   let cart = loadCart();
   cart = cart.filter((item) => item.id !== productId);
@@ -74,7 +64,7 @@ function removeFromCart(productId) {
   updateCartBadge();
 }
 
-/** Update little count bubble in navbar */
+/** Update the little cart count in navbar */
 function updateCartBadge() {
   const badge = document.getElementById("cartCount");
   if (!badge) return;
@@ -83,7 +73,7 @@ function updateCartBadge() {
   badge.textContent = totalQty;
 }
 
-// ---------- cart page rendering ----------
+// ---- CART PAGE RENDERING ----
 
 function renderCart() {
   const itemsContainer = document.getElementById("cartItemsContainer");
@@ -94,8 +84,8 @@ function renderCart() {
   const saveTextEl = document.getElementById("summarySavings");
   const itemsLabelEl = document.getElementById("summaryItemsLabel");
 
-  // not on cart page or PRODUCTS missing
-  if (!itemsContainer || typeof PRODUCTS === "undefined") return;
+  // If we’re not on cart.html, stop
+  if (!itemsContainer || !window.PRODUCTS) return;
 
   const cart = loadCart();
 
@@ -110,14 +100,6 @@ function renderCart() {
     if (totalEl) totalEl.textContent = "₹0";
     if (saveTextEl) saveTextEl.textContent = "You will save ₹0 on this order";
     if (itemsLabelEl) itemsLabelEl.textContent = "Price (0 item)";
-    CART_TOTALS = {
-      totalMrp: 0,
-      totalPrice: 0,
-      discount: 0,
-      deliveryCharge: 0,
-      grandTotal: 0,
-      totalQty: 0,
-    };
     return;
   }
 
@@ -136,27 +118,17 @@ function renderCart() {
     totalPrice += linePrice;
     totalQty += item.qty;
 
-    // --- image path fix ---
-    let imgSrc = product.images || "";
-    if (imgSrc && !/^https?:\/\//i.test(imgSrc)) {
-      imgSrc = "./" + imgSrc.replace(/^\.?\//, "");
-    }
-
     const row = document.createElement("div");
     row.className = "cart-item-row";
     row.innerHTML = `
       <div class="cart-item-main">
-        <img src="${imgSrc}" alt="${product.name}">
+        <img src="${product.images}" alt="${product.name}">
         <div class="cart-item-info">
           <div class="cart-item-name">${product.name}</div>
           <div class="cart-item-short">${product.short || ""}</div>
           <div class="cart-item-price">
             <span>₹${product.price}</span>
-            ${
-              mrp > product.price
-                ? `<span class="cart-item-mrp">₹${mrp}</span>`
-                : ""
-            }
+            ${mrp > product.price ? `<span class="cart-item-mrp">₹${mrp}</span>` : ""}
           </div>
           <div class="cart-item-actions">
             <button class="qty-btn" data-action="minus" data-id="${product.id}">−</button>
@@ -172,7 +144,7 @@ function renderCart() {
 
   const discount = totalMrp - totalPrice;
 
-  // Delivery: simple rules
+  // Delivery (simple: free above ₹500, else ₹40, only after pincode check)
   const pinInput = document.getElementById("pincodeInput");
   const pinValue = pinInput ? pinInput.value.trim() : "";
   let deliveryCharge = 0;
@@ -186,32 +158,16 @@ function renderCart() {
 
   const grandTotal = totalPrice + deliveryCharge;
 
-  // save totals globally for "Place order"
-  CART_TOTALS = {
-    totalMrp,
-    totalPrice,
-    discount,
-    deliveryCharge,
-    grandTotal,
-    totalQty,
-  };
-
-  if (itemsLabelEl)
-    itemsLabelEl.textContent = `Price (${totalQty} item${
-      totalQty > 1 ? "s" : ""
-    })`;
+  if (itemsLabelEl) itemsLabelEl.textContent = `Price (${totalQty} item${totalQty > 1 ? "s" : ""})`;
   if (priceValueEl) priceValueEl.textContent = `₹${totalMrp}`;
   if (discountEl) discountEl.textContent = discount ? `- ₹${discount}` : "- ₹0";
   if (deliveryEl) deliveryEl.textContent = deliveryLabel;
   if (totalEl) totalEl.textContent = `₹${grandTotal}`;
-  if (saveTextEl)
-    saveTextEl.textContent =
-      discount > 0 ? `You will save ₹${discount} on this order` : "Great choice!";
+  if (saveTextEl) saveTextEl.textContent =
+    discount > 0 ? `You will save ₹${discount} on this order` : "Great choice!";
 }
 
-// ---------- event listeners ----------
-
-// +/- buttons & remove
+// Listener to handle + / - / remove / manual qty changes
 document.addEventListener("click", function (e) {
   const target = e.target;
 
@@ -232,14 +188,9 @@ document.addEventListener("click", function (e) {
     const id = target.getAttribute("data-id");
     removeFromCart(id);
   }
-
-  // PLACE ORDER button
-  if (target.matches(".place-order-btn")) {
-    handlePlaceOrder();
-  }
 });
 
-// manual qty change
+// Manual quantity input
 document.addEventListener("change", function (e) {
   if (e.target.matches(".cart-item-row .qty-input")) {
     const id = e.target.getAttribute("data-id");
@@ -247,53 +198,18 @@ document.addEventListener("change", function (e) {
   }
 });
 
-// pincode check
+// Re-render cart when pincode is checked
 document.addEventListener("click", function (e) {
   if (e.target && e.target.id === "checkPincodeBtn") {
     renderCart();
   }
 });
 
-// initial
+// Initial badge + optional cart render
 document.addEventListener("DOMContentLoaded", function () {
   updateCartBadge();
+  // If we're on cart page, render it
   if (document.getElementById("cartItemsContainer")) {
     renderCart();
   }
 });
-
-// ---------- PLACE ORDER handler ----------
-
-function handlePlaceOrder() {
-  const cart = loadCart();
-  if (!cart.length) {
-    alert("Your cart is empty.");
-    return;
-  }
-
-  if (typeof PRODUCTS === "undefined") {
-    alert("Something went wrong. Please refresh the page.");
-    return;
-  }
-
-  // build order summary
-  const lines = cart
-    .map((item) => {
-      const product = PRODUCTS.find((p) => p.id === item.id);
-      if (!product) return null;
-      return `${product.name} × ${item.qty} — ₹${product.price * item.qty}`;
-    })
-    .filter(Boolean);
-
-  const totalLine = `Total: ₹${CART_TOTALS.grandTotal}`;
-  const msg = `GreenWrite Order:%0A%0A${lines.join(
-    "%0A"
-  )}%0A%0A${totalLine}`;
-
-  // your WhatsApp number (change this)
-  const phone = "91XXXXXXXXXX"; // e.g. 919876543210
-
-  // open WhatsApp chat
-  const url = `https://wa.me/${phone}?text=${msg}`;
-  window.open(url, "_blank");
-}
