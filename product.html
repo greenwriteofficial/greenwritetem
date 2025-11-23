@@ -366,94 +366,109 @@
   <script src="cart.js"></script>
 
   <script>
-    // Footer year
-    document.getElementById("year").textContent = new Date().getFullYear();
+  // Footer year
+  document.getElementById("year").textContent = new Date().getFullYear();
 
-    // Get URL param ?id=...
-    function getQueryParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(name);
+  // Helpers
+  function getQueryParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+
+  function formatPrice(num) {
+    return num.toLocaleString("en-IN");
+  }
+
+  // Get product from ?id=
+  const id = getQueryParam("id");
+  // IMPORTANT: use PRODUCTS directly, not window.PRODUCTS
+  const product = (typeof PRODUCTS !== "undefined" ? PRODUCTS : []).find(
+    p => p.id === id
+  );
+
+  // Grab DOM elements
+  const heroTitle      = document.getElementById("heroTitle");
+  const heroBreadcrumb = document.getElementById("heroBreadcrumb");
+  const imgEl          = document.getElementById("productImage");
+  const titleEl        = document.getElementById("productTitle");
+  const tagEl          = document.getElementById("productTag");
+  const priceEl        = document.getElementById("productPrice");
+  const descEl         = document.getElementById("productDescription");
+  const metaEl         = document.getElementById("productMeta");
+  const qtyInput       = document.getElementById("qtyInput");
+  const addBtn         = document.getElementById("addToCartBtn");
+
+  if (!product) {
+    // Wrong / missing id
+    heroTitle.textContent = "Product not found";
+    heroBreadcrumb.textContent = "Home › Shop";
+    titleEl.textContent = "Product not found";
+    priceEl.textContent = "₹0";
+    descEl.textContent =
+      "We couldn’t find this product. Please go back to the shop.";
+    imgEl.alt = "No product";
+  } else {
+    // HERO
+    heroTitle.textContent = product.name;
+    heroBreadcrumb.textContent = `Home › Shop › ${product.name}`;
+
+    // IMAGE
+    if (product.image) {
+      imgEl.src = product.image;
+      imgEl.alt = product.name;
     }
 
-    function formatPrice(num) {
-      return num.toLocaleString("en-IN");
-    }
-
-    const id = getQueryParam("id");
-    const product = (window.PRODUCTS || []).find(p => p.id === id);
-
-    const heroTitle      = document.getElementById("heroTitle");
-    const heroBreadcrumb = document.getElementById("heroBreadcrumb");
-    const imgEl          = document.getElementById("productImage");
-    const titleEl        = document.getElementById("productTitle");
-    const tagEl          = document.getElementById("productTag");
-    const priceEl        = document.getElementById("productPrice");
-    const descEl         = document.getElementById("productDescription");
-    const metaEl         = document.getElementById("productMeta");
-    const qtyInput       = document.getElementById("qtyInput");
-    const addBtn         = document.getElementById("addToCartBtn");
-
-    if (!product) {
-      // Bad / missing id
-      heroTitle.textContent = "Product not found";
-      heroBreadcrumb.textContent = "Home › Shop";
-      titleEl.textContent = "Product not found";
-      priceEl.textContent = "₹0";
-      descEl.textContent = "We couldn’t find this product. Please go back to the shop.";
-      imgEl.alt = "No product";
+    // TITLE + TAG
+    titleEl.textContent = product.name;
+    if (product.tagLabel || product.category) {
+      tagEl.textContent = product.tagLabel || product.category;
+      tagEl.style.display = "inline-block";
     } else {
-      // HERO
-      heroTitle.textContent = product.name;
-      heroBreadcrumb.textContent = `Home › Shop › ${product.name}`;
-
-      // IMAGE
-      if (product.image) {
-        imgEl.src = product.image;
-        imgEl.alt = product.name;
-      }
-
-      // TITLE + TAG
-      titleEl.textContent = product.name;
-      if (product.tagLabel || product.category) {
-        tagEl.textContent = product.tagLabel || product.category;
-        tagEl.style.display = "inline-block";
-      } else {
-        tagEl.style.display = "none";
-      }
-
-      // PRICE / MRP / DISCOUNT
-      const price = product.price;
-      const mrp   = product.mrp || product.price;
-
-      if (mrp > price) {
-        const offPercent = Math.round(((mrp - price) / mrp) * 100);
-        priceEl.innerHTML = `
-          ₹${formatPrice(price)}
-          <span style="font-size:.9rem;font-weight:500;color:#888;margin-left:.4rem;text-decoration:line-through;">
-            ₹${formatPrice(mrp)}
-          </span>
-          <span style="font-size:.85rem;font-weight:600;color:#059b52;margin-left:.4rem;">
-            ${offPercent}% off
-          </span>
-        `;
-      } else {
-        priceEl.textContent = `₹${formatPrice(price)}`;
-      }
-
-      // DESCRIPTION + META
-      descEl.textContent = product.description || product.short || "";
-      metaEl.textContent = [
-        product.badge ? `Highlight: ${product.badge}` : "",
-        product.category ? `Category: ${product.category}` : ""
-      ].filter(Boolean).join(" • ");
-
-      // ADD TO CART
-      addBtn.addEventListener("click", () => {
-        const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
-        addToCart(product.id, qty);  // from cart.js
-        alert("Added to cart!");
-      });
+      tagEl.style.display = "none";
     }
+
+    // PRICE + MRP + % OFF
+    const price = product.price;
+    const mrp   = product.mrp || product.price;
+
+    if (mrp > price) {
+      const offPercent = Math.round(((mrp - price) / mrp) * 100);
+      priceEl.innerHTML = `
+        ₹${formatPrice(price)}
+        <span style="
+          font-size:.9rem;
+          font-weight:500;
+          color:#888;
+          margin-left:.4rem;
+          text-decoration:line-through;">
+          ₹${formatPrice(mrp)}
+        </span>
+        <span style="
+          font-size:.85rem;
+          font-weight:600;
+          color:#059b52;
+          margin-left:.4rem;">
+          ${offPercent}% off
+        </span>
+      `;
+    } else {
+      priceEl.textContent = `₹${formatPrice(price)}`;
+    }
+
+    // DESCRIPTION + META
+    descEl.textContent = product.description || product.short || "";
+    metaEl.textContent = [
+      product.badge ? `Highlight: ${product.badge}` : "",
+      product.category ? `Category: ${product.category}` : ""
+    ].filter(Boolean).join(" • ");
+
+    // ADD TO CART
+    addBtn.addEventListener("click", () => {
+      const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
+      addToCart(product.id, qty); // from cart.js
+      alert("Added to cart!");
+    });
+  }
 
     // Mobile nav toggle
     (function () {
@@ -476,3 +491,4 @@
   </script>
 </body>
 </html>
+
