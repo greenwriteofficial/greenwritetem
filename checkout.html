@@ -327,13 +327,15 @@
 </main>
 
 <!-- EXISTING CART LOGIC (non-module) -->
+<!-- 1) Old style scripts: products + cart + checkout -->
 <script src="products-data.js"></script>
 <script src="cart.js"></script>
-
-<!-- CHECKOUT LOGIC (module) -->
 <script src="checkout.js"></script>
 
-<!-- GOOGLE AUTH (keeps your login UI) -->
+<!-- 2) Firebase + order saving (modules) -->
+<script type="module" src="checkout-firebase.js"></script>
+
+<!-- 3) Auth (already a module) -->
 <script type="module" src="auth.js"></script>
 </body>
 </html>
