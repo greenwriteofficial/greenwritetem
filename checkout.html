@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>GreenWrite — Checkout</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --green: #4cd964;
+      --green-dark: #2bbf4a;
+      --navy: #050816;
+      --text-dark: #141414;
+      --text-muted: #4a4a4a;
+      --shadow-soft: 0 14px 30px rgba(0,0,0,0.18);
+    }
+
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: "Poppins", sans-serif;
+      background:#f5f7fb;
+      color:var(--text-dark);
+    }
+    a { text-decoration:none; color:inherit; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(5, 8, 22, 0.96);
+      backdrop-filter: blur(16px);
+    }
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #ffffff;
+    }
+    .nav-left { display:flex;align-items:center;gap:0.6rem; }
+    .logo-icon {
+      width:36px;height:36px;border-radius:50%;
+      background:radial-gradient(circle at 30% 20%,#ccff90,var(--green));
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.1rem;font-weight:700;color:#0a0a0a;
+    }
+    .logo-text { font-weight:700;font-size:1.2rem;letter-spacing:0.06em;text-transform:uppercase; }
+    .nav-links { display:flex;align-items:center;gap:1.8rem;font-size:0.95rem; }
+    .nav-links a { color:#f5f5f5;opacity:0.9; }
+    .nav-links a:hover { opacity:1; }
+
+    .nav-cart {
+      position: relative;
+      margin-right: 0.4rem;
+      font-size: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-cart-count {
+      position: absolute;
+      top: -0.4rem;
+      right: -0.5rem;
+      background: #ff4b5c;
+      color:#fff;
+      border-radius:999px;
+      padding:0 0.35rem;
+      font-size:0.7rem;
+      font-weight:700;
+    }
+
+    .nav-right {
+      display:flex;
+      align-items:center;
+      gap:0.8rem;
+    }
+
+    /* MAIN LAYOUT */
+    .checkout-main {
+      max-width: 1100px;
+      margin: 2.5rem auto 3rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr);
+      gap: 2rem;
+    }
+
+    .checkout-card {
+      background:#ffffff;
+      border-radius:1.2rem;
+      box-shadow:0 10px 24px rgba(0,0,0,0.09);
+      padding:1.5rem 1.7rem 1.7rem;
+      font-size:0.9rem;
+    }
+
+    .checkout-title {
+      font-size:1.1rem;
+      font-weight:600;
+      margin-bottom:1rem;
+    }
+
+    .checkout-field {
+      margin-bottom:0.9rem;
+    }
+    .checkout-field label {
+      display:block;
+      font-size:0.85rem;
+      margin-bottom:0.2rem;
+    }
+    .checkout-input,
+    .checkout-textarea,
+    .checkout-select {
+      width:100%;
+      border-radius:0.8rem;
+      border:1px solid #dde2f0;
+      padding:0.55rem 0.75rem;
+      font-family:inherit;
+      font-size:0.9rem;
+      outline:none;
+      background:#fbfcff;
+    }
+    .checkout-input:focus,
+    .checkout-textarea:focus {
+      border-color:#00a169;
+      box-shadow:0 0 0 1px rgba(0,161,105,0.18);
+    }
+    .checkout-textarea {
+      resize:vertical;
+      min-height:70px;
+    }
+
+    .payment-methods {
+      display:flex;
+      gap:0.9rem;
+      margin-top:0.3rem;
+      font-size:0.88rem;
+    }
+    .payment-pill {
+      display:inline-flex;
+      align-items:center;
+      gap:0.35rem;
+      border-radius:999px;
+      border:1px solid #dde2f0;
+      padding:0.35rem 0.8rem;
+      cursor:pointer;
+      background:#fbfcff;
+    }
+
+    .checkout-note {
+      font-size:0.78rem;
+      color:#777;
+      margin-top:0.5rem;
+    }
+
+    /* ORDER SUMMARY */
+    .order-items {
+      border-top:1px dashed #e1e4f0;
+      margin-top:0.8rem;
+      padding-top:0.8rem;
+      max-height:260px;
+      overflow:auto;
+    }
+    .order-item-row {
+      display:flex;
+      justify-content:space-between;
+      gap:0.5rem;
+      margin-bottom:0.4rem;
+      font-size:0.85rem;
+    }
+    .order-item-name {
+      font-weight:500;
+    }
+    .order-item-meta {
+      font-size:0.78rem;
+      color:#777;
+    }
+
+    .summary-row {
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:0.4rem;
+      font-size:0.9rem;
+    }
+    .summary-row.bold {
+      font-weight:600;
+      border-top:1px dashed #e1e4f0;
+      padding-top:0.6rem;
+      margin-top:0.4rem;
+    }
+
+    .btn-primary {
+      width:100%;
+      border:none;
+      border-radius:999px;
+      background:#ff7a1a;
+      color:#ffffff;
+      padding:0.75rem 1rem;
+      font-size:0.95rem;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:0 16px 28px rgba(255,122,26,0.4);
+      margin-top:0.9rem;
+    }
+
+    .summary-badge {
+      font-size:0.8rem;
+      color:#059b52;
+      margin-top:0.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .checkout-main {
+        grid-template-columns: minmax(0,1fr);
+      }
+      .nav-links { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <div class="nav-left">
+      <a href="index.html" style="display:flex;align-items:center;gap:0.6rem;">
+        <div class="logo-icon">GW</div>
+        <div class="logo-text">GreenWrite</div>
+      </a>
+      <div class="nav-links">
+        <a href="index.html#about">About us</a>
+        <a href="impact.html">Our Impact</a>
+        <a href="products.html">Products</a>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <a href="cart.html" class="nav-cart" aria-label="Cart">
+        🛒
+        <span id="cartCount" class="nav-cart-count">0</span>
+      </a>
+      <div id="userBox" class="user-info"></div>
+    </div>
+  </nav>
+</header>
+
+<main class="checkout-main">
+  <!-- LEFT: CUSTOMER DETAILS -->
+  <section class="checkout-card">
+    <h1 class="checkout-title">Delivery & Contact Details</h1>
+
+    <form id="checkoutForm">
+      <div class="checkout-field">
+        <label for="fullName">Full Name</label>
+        <input id="fullName" class="checkout-input" type="text" required />
+      </div>
+
+      <div class="checkout-field">
+        <label for="phone">Phone</label>
+        <input id="phone" class="checkout-input" type="tel" required />
+      </div>
+
+      <div class="checkout-field">
+        <label for="email">Email</label>
+        <input id="email" class="checkout-input" type="email" required />
+      </div>
+
+      <div class="checkout-field">
+        <label for="address">Address</label>
+        <textarea id="address" class="checkout-textarea" required></textarea>
+      </div>
+
+      <div class="checkout-field">
+        <label for="pincode">Pincode</label>
+        <input id="pincode" class="checkout-input" type="text" required />
+      </div>
+
+      <div class="checkout-field">
+        <label>Payment Method</label>
+        <div class="payment-methods">
+          <label class="payment-pill">
+            <input type="radio" name="paymentMethod" value="COD" checked />
+            <span>Cash on Delivery</span>
+          </label>
+          <label class="payment-pill">
+            <input type="radio" name="paymentMethod" value="PREPAID" />
+            <span>Online (Prepaid)</span>
+          </label>
+        </div>
+        <p class="checkout-note">
+          Online prepaid will use Razorpay. For now we’ll first get COD working, then plug in Razorpay.
+        </p>
+      </div>
+
+      <button type="submit" class="btn-primary" id="placeOrderBtn">
+        Place Order
+      </button>
+      <p class="checkout-note" id="checkoutStatus"></p>
+    </form>
+  </section>
+
+  <!-- RIGHT: ORDER SUMMARY -->
+  <aside class="checkout-card">
+    <h2 class="checkout-title">Order Summary</h2>
+
+    <div id="orderItems" class="order-items"></div>
+
+    <div style="margin-top:0.8rem;">
+      <div class="summary-row">
+        <span>Items total (MRP)</span>
+        <span>₹<span id="summaryMrp">0</span></span>
+      </div>
+      <div class="summary-row">
+        <span>Discount</span>
+        <span style="color:#059b52;">- ₹<span id="summaryDiscount">0</span></span>
+      </div>
+      <div class="summary-row bold">
+        <span>Payable Amount</span>
+        <span>₹<span id="summaryTotal">0</span></span>
+      </div>
+      <div class="summary-badge" id="summaryNote">
+        Reviewing your cart…
+      </div>
+    </div>
+  </aside>
+</main>
+
+<!-- EXISTING CART LOGIC (non-module) -->
+<script src="products-data.js"></script>
+<script src="cart.js"></script>
+
+<!-- CHECKOUT LOGIC (module) -->
+<script type="module" src="checkout.js"></script>
+
+<!-- GOOGLE AUTH (keeps your login UI) -->
+<script type="module" src="auth.js"></script>
+
+</body>
+</html>
