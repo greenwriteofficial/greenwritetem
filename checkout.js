@@ -189,3 +189,49 @@ document.addEventListener("DOMContentLoaded", () => {
         email,
         address,
         pincode,
+      },
+      user: currentUser || null, // Google user info if logged in
+      items: summary.cartItems,
+      suppliers: supplierSplit,
+    };
+
+    try {
+      if (buttonEl) {
+        buttonEl.disabled = true;
+        buttonEl.textContent = "Placing order…";
+      }
+      if (statusEl) {
+        statusEl.textContent = "Saving your order securely…";
+      }
+
+      const ref = await addDoc(collection(db, "orders"), orderData);
+      const orderId = ref.id;
+
+      if (statusEl) {
+        statusEl.textContent = `Order placed! ID: ${orderId}`;
+      }
+
+      // TODO: send emails per supplier
+      await sendSupplierEmails(orderId, orderData);
+
+      // Clear cart using function from cart.js
+      if (typeof clearCart === "function") {
+        clearCart();
+      }
+
+      alert("Your order has been placed! We'll contact you shortly.");
+      window.location.href = "index.html";
+    } catch (err) {
+      console.error("Error saving order:", err);
+      if (statusEl) {
+        statusEl.textContent = "Error placing order. Please try again.";
+      }
+      alert("Something went wrong while placing your order.");
+    } finally {
+      if (buttonEl) {
+        buttonEl.disabled = false;
+        buttonEl.textContent = "Place Order";
+      }
+    }
+  });
+});
