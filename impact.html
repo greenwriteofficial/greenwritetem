@@ -622,15 +622,32 @@
         <a href="impact.html" class="active">Our Impact</a>
         <a href="products.html">Products</a>
         <a href="index.html#contact">Contact</a>
-       <a
-  href="https://wa.me/918287734776?text=Hi%20GreenWrite!%20I%27d%20like%20to%20know%20more%20about%20your%20plantable%20pens%20and%20gifting%20solutions."
-  class="nav-cta"
-  target="_blank"
-  rel="noopener"
->
-  <span>📞</span> Inquire Now
-</a>
-      </div>
+       <div class="nav-right">
+  <!-- Auth area -->
+  <div class="nav-auth">
+    <div id="userBox" class="user-info"></div>
+
+    <button id="loginBtn" class="nav-btn nav-btn-login" onclick="googleLogin()">
+      <span class="nav-btn-icon">🔒</span>
+      <span>Login with Google</span>
+    </button>
+
+    <button id="logoutBtn" class="nav-btn nav-btn-logout" onclick="logoutUser()" style="display:none;">
+      <span class="nav-btn-icon">👋</span>
+      <span>Logout</span>
+    </button>
+  </div>
+
+  <!-- your existing Inquire Now button -->
+  <a
+    href="https://wa.me/918287734776?text=Hi%20GreenWrite!%20I%27d%20like%20to%20know%20more%20about%20your%20plantable%20pens%20and%20gifting%20solutions."
+    class="nav-cta"
+    target="_blank"
+    rel="noopener"
+  >
+    <span>📞</span> Inquire Now
+  </a>
+</div>
     </nav>
   </header>
 
@@ -850,6 +867,8 @@
       }
     });
   </script>
+  <script type="module" src="auth.js"></script>
 </body>
 </html>
+
 
