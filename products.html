@@ -24,6 +24,10 @@
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: "Poppins", sans-serif;
       color: var(--text-dark);
@@ -97,10 +101,12 @@
     .nav-links a {
       color: #f5f5f5;
       opacity: 0.9;
+      transition: opacity 0.18s ease, transform 0.18s ease;
     }
 
     .nav-links a:hover {
       opacity: 1;
+      transform: translateY(-1px);
     }
 
     .nav-links .active {
@@ -119,18 +125,7 @@
       background: #00c26f;
     }
 
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.55rem 1.3rem;
-      border-radius: 999px;
-      background: #00c26f;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #ffffff;
-      box-shadow: 0 12px 22px rgba(0, 194, 111, 0.4);
-    }
+    /* Cart icon in nav */
 
     .nav-cart {
       position: relative;
@@ -139,6 +134,12 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .nav-cart:hover {
+      transform: translateY(-1px);
     }
 
     .nav-cart-count {
@@ -153,7 +154,7 @@
       font-weight: 600;
       min-width: 14px;
       text-align: center;
-      visibility: hidden; /* hidden when count is 0 */
+      visibility: hidden; /* shown when count > 0 by JS */
     }
 
     /* ---------- NAV AUTH (Google login) ---------- */
@@ -245,6 +246,26 @@
       transform: translateY(-1px);
     }
 
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.3rem;
+      border-radius: 999px;
+      background: #00c26f;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ffffff;
+      box-shadow: 0 12px 22px rgba(0, 194, 111, 0.4);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .nav-cta:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(0, 194, 111, 0.5);
+    }
+
     /* HAMBURGER BUTTON */
 
     .nav-toggle {
@@ -285,10 +306,22 @@
 
     /* ========= SHOP HERO ========= */
 
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .shop-hero {
       background-image: linear-gradient(120deg, #00a7b8 0%, #00c26f 50%, #00a7b8 100%);
       color: #ffffff;
       padding: 3.5rem 1.5rem 3rem;
+      animation: fadeDown 0.45s ease-out;
     }
 
     .shop-hero-inner {
@@ -328,6 +361,8 @@
       border-radius: 1.4rem;
       padding: 1.4rem 1.3rem;
       box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 6rem;
     }
 
     .shop-sidebar-title {
@@ -343,6 +378,12 @@
       padding: 0.7rem 1rem;
       font-size: 0.9rem;
       outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .shop-search-input:focus {
+      border-color: #00a169;
+      box-shadow: 0 0 0 2px rgba(0, 161, 105, 0.18);
     }
 
     .shop-filter-list {
@@ -362,6 +403,11 @@
       cursor: pointer;
       color: #2d3a4a;
       font-size: 0.9rem;
+      transition: color 0.18s ease, transform 0.12s ease;
+    }
+
+    .shop-filter-list button:hover {
+      transform: translateX(2px);
     }
 
     .shop-filter-list button.active {
@@ -388,49 +434,76 @@
     .shop-sort {
       border-radius: 999px;
       border: 1px solid #dde3ef;
-      padding: 0.5rem 0.9rem;
-      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
       background: #ffffff;
       outline: none;
     }
 
-    /* PRODUCTS GRID */
+    /* GRID & CARDS */
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
     .shop-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.6rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
     }
 
     .shop-card {
       background: #ffffff;
-      border-radius: 1.4rem;
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+      border-radius: 1.2rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      animation: fadeUp 0.35s ease-out;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    @media (hover: hover) {
+      .shop-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.12);
+      }
     }
 
     .shop-card-img-wrap {
-      background: #f1f4f9;
-      padding: 1rem;
+      width: 100%;
+      background: linear-gradient(135deg, #f0fff4, #f7fbff);
+      padding: 1.2rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 170px;
+      min-height: 160px;
     }
 
     .shop-card-body {
-      padding: 1.2rem 1.1rem 1rem;
+      padding: 1rem 1rem 0.9rem;
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
+      gap: 0.4rem;
     }
 
     .shop-card-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
       font-size: 0.7rem;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.13em;
+      background: #e7ffe9;
       color: #0b9445;
     }
 
@@ -466,52 +539,61 @@
       background: #00c26f;
       color: #ffffff;
       cursor: pointer;
+      transition: background 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
     }
 
     .shop-card-btn:hover {
       background: #02b465;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(0, 194, 111, 0.4);
     }
 
-    /* ========= RESPONSIVE ========= */
+    /* RESPONSIVE */
+
+    @media (max-width: 1024px) {
+      .shop-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
 
     @media (max-width: 900px) {
       .nav-toggle {
-        display: flex; /* show hamburger */
+        display: flex;
       }
 
       .nav {
-        padding: 0.7rem 1.1rem;
+        padding: 0.75rem 1rem;
       }
 
       .nav-links {
         position: fixed;
-        top: 56px; /* under navbar */
+        top: 56px;
         left: 0;
         right: 0;
         background: rgba(5, 8, 22, 0.98);
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
-        padding: 1rem 1.5rem 1.6rem;
-        transform: translateY(-120%);
+        padding: 1rem 1.4rem 1.6rem;
+        max-height: 0;
+        overflow: hidden;
         opacity: 0;
         pointer-events: none;
-        transition: transform 0.25s ease, opacity 0.25s ease;
-      }
-
-      .nav-links a,
-      .nav-links .nav-cta {
-        width: 100%;
+        transition: max-height 0.25s ease, opacity 0.25s ease;
       }
 
       .nav-links.is-open {
-        transform: translateY(0);
+        max-height: 320px;
         opacity: 1;
         pointer-events: auto;
       }
 
       .nav-right {
-        gap: 0.5rem;
+        width: 100%;
+        justify-content: flex-start;
+        gap: 0.6rem;
+        margin-top: 0.8rem;
+        flex-wrap: wrap;
       }
 
       .user-info span {
@@ -527,6 +609,15 @@
       }
 
       .shop-inner {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .shop-sidebar-card {
+        position: static;
+        order: -1;
+      }
+
+      .shop-grid {
         grid-template-columns: minmax(0, 1fr);
       }
     }
@@ -559,6 +650,12 @@
         <a href="index.html#contact">Contact</a>
 
         <div class="nav-right">
+          <!-- Cart -->
+          <a href="cart.html" class="nav-cart" aria-label="Cart">
+            🛒
+            <span id="cartCount" class="nav-cart-count">0</span>
+          </a>
+
           <!-- Auth area -->
           <div class="nav-auth">
             <div id="userBox" class="user-info"></div>
@@ -632,6 +729,8 @@
 
   <!-- PRODUCT DATA (external) -->
   <script src="products-data.js"></script>
+  <!-- Cart utilities for cart badge -->
+  <script src="cart.js"></script>
 
   <!-- PRODUCTS RENDER SCRIPT -->
   <script>
@@ -679,6 +778,7 @@
     }
 
     function applySort(list) {
+      // FIXED: proper spread
       const items = [...list];
 
       if (currentSort === "price-asc") {
@@ -740,8 +840,8 @@
   <!-- MOBILE NAV TOGGLE -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const navToggle = document.querySelector('.nav-toggle');
-      const navLinks  = document.querySelector('.nav-links');
+      const navToggle = document.getElementById('navToggle');
+      const navLinks  = document.getElementById('navLinks');
 
       if (!navToggle || !navLinks) return;
 
@@ -759,6 +859,7 @@
     });
   </script>
 
+  <!-- GOOGLE AUTH MODULE -->
   <script type="module" src="auth.js"></script>
 </body>
 </html>
