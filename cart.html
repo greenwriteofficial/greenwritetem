@@ -13,7 +13,7 @@
       --navy: #050816;
       --text-dark: #141414;
       --text-muted: #4a4a4a;
-      --shadow-soft: 0 14px 30px rgba(0, 0, 0, 0.18);
+      --shadow-soft: 0 14px 30px rgba(0,0,0,0.18);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -105,7 +105,6 @@
       gap: 0.6rem;
     }
 
-    /* Logged-in user info (avatar + name) */
     .user-info {
       display: flex;
       align-items: center;
@@ -127,7 +126,6 @@
       box-shadow: 0 0 0 1px rgba(9, 255, 120, 0.4);
     }
 
-    /* Shared button style */
     .nav-btn {
       border-radius: 999px;
       padding: 0.45rem 0.95rem;
@@ -154,7 +152,6 @@
       font-size: 0.9rem;
     }
 
-    /* Login button: green accent */
     .nav-btn-login {
       border-color: rgba(76, 217, 100, 0.65);
       box-shadow: 0 0 0 1px rgba(76, 217, 100, 0.25);
@@ -167,7 +164,6 @@
       transform: translateY(-1px);
     }
 
-    /* Logout button: subtle red accent */
     .nav-btn-logout {
       border-color: rgba(255, 119, 119, 0.6);
       color: #ffd4d4;
@@ -180,7 +176,6 @@
       transform: translateY(-1px);
     }
 
-    /* Mobile: hide text to save space, keep icons */
     @media (max-width: 900px) {
       .nav-right {
         gap: 0.5rem;
@@ -216,54 +211,6 @@
       font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 1rem;
-    }
-
-    /* DELIVERY BAR -------------------------------------------- */
-
-    .cart-address-bar {
-      background:#ffffff;
-      border-radius:1.2rem;
-      box-shadow:0 8px 18px rgba(0,0,0,0.06);
-      padding:1rem 1.3rem;
-      margin-bottom:1rem;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:1rem;
-    }
-    .cart-address-label {
-      font-size:0.85rem;
-      font-weight:600;
-      color:#555;
-      margin-bottom:0.1rem;
-    }
-    .cart-address-text {
-      font-size:0.85rem;
-      color:#666;
-    }
-    .cart-address-input-wrap {
-      display:flex;
-      gap:0.4rem;
-      align-items:center;
-    }
-    #pincodeInput {
-      width:90px;
-      border-radius:999px;
-      border:1px solid #dde3ef;
-      padding:0.4rem 0.7rem;
-      font-size:0.85rem;
-      outline:none;
-      text-align:center;
-    }
-    #pincodeBtn {
-      border-radius:999px;
-      border:none;
-      padding:0.4rem 0.9rem;
-      font-size:0.85rem;
-      font-weight:600;
-      cursor:pointer;
-      background:#00c26f;
-      color:#ffffff;
     }
 
     /* LEFT ITEMS ---------------------------------------------- */
@@ -496,7 +443,6 @@
           </button>
         </div>
 
-        <!-- your existing Inquire Now button -->
         <a
           href="https://wa.me/918287734776?text=Hi%20GreenWrite!%20I%27d%20like%20to%20know%20more%20about%20your%20plantable%20pens%20and%20gifting%20solutions."
           class="nav-cta"
@@ -516,19 +462,6 @@
     <section>
       <h1 class="cart-heading">My Cart</h1>
 
-      <div class="cart-address-bar">
-        <div>
-          <div class="cart-address-label">Deliver to</div>
-          <div id="cartAddressText" class="cart-address-text">
-            Enter your pincode to check delivery time & charges.
-          </div>
-        </div>
-        <div class="cart-address-input-wrap">
-          <input type="text" id="pincodeInput" maxlength="6" placeholder="Pincode" />
-          <button id="pincodeBtn">Check</button>
-        </div>
-      </div>
-
       <div class="cart-items-card">
         <div class="cart-items-header">From GreenWrite</div>
         <div id="cartItemsContainer" class="cart-items-body"></div>
@@ -547,10 +480,6 @@
         <div class="cart-summary-row">
           <span>Discount</span>
           <span style="color:#059b52;">- ₹<span id="summaryDiscount">0</span></span>
-        </div>
-        <div class="cart-summary-row">
-          <span>Delivery</span>
-          <span id="summaryDeliveryText">Enter pincode</span>
         </div>
 
         <div class="cart-summary-row bold">
@@ -583,41 +512,9 @@
   const discountEl         = document.getElementById("summaryDiscount");
   const totalEl            = document.getElementById("summaryTotal");
   const savingsTextEl      = document.getElementById("summarySavingsText");
-  const deliveryTextEl     = document.getElementById("summaryDeliveryText");
-  const addressTextEl      = document.getElementById("cartAddressText");
-  const pincodeInput       = document.getElementById("pincodeInput");
-  const pincodeBtn         = document.getElementById("pincodeBtn");
-
-  let currentShippingCharge = 0;
 
   function formatPrice(num) {
     return num.toLocaleString("en-IN");
-  }
-
-  function calculateShipping(pin) {
-    if (!/^\d{6}$/.test(pin)) {
-      return { charge: 0, eta: "", message: "Please enter a valid 6-digit pincode." };
-    }
-
-    const prefix = pin.slice(0, 2);
-    let charge, eta;
-
-    if (["11", "12", "13"].includes(prefix)) {
-      charge = 30;
-      eta = "2–4 days";
-    } else if (["40", "41", "42", "56", "57"].includes(prefix)) {
-      charge = 40;
-      eta = "4–7 days";
-    } else {
-      charge = 60;
-      eta = "5–9 days";
-    }
-
-    return {
-      charge,
-      eta,
-      message: charge === 0 ? "FREE delivery" : `₹${charge} • Estimated ${eta}`,
-    };
   }
 
   function renderCart() {
@@ -631,7 +528,6 @@
       mrpEl.textContent = "0";
       discountEl.textContent = "0";
       totalEl.textContent = "0";
-      deliveryTextEl.textContent = "Enter pincode";
       savingsTextEl.textContent = "You will save ₹0 on this order";
       return;
     }
@@ -647,8 +543,8 @@
       const qty = item.qty || 1;
       totalItems += qty;
 
-      const price    = product.price;
-      const mrp      = product.mrp || price;
+      const price     = product.price;
+      const mrp       = product.mrp || price;
       const lineTotal = price * qty;
       const lineMrp   = mrp * qty;
       totalPrice += lineTotal;
@@ -692,7 +588,7 @@
     });
 
     const totalDiscount = totalMrp - totalPrice;
-    const grandTotal    = totalPrice + currentShippingCharge;
+    const grandTotal    = totalPrice; // no shipping
 
     itemsCountEl.textContent = totalItems;
     mrpEl.textContent        = formatPrice(totalMrp);
@@ -732,24 +628,6 @@
       removeFromCart(id);
       renderCart();
     }
-  });
-
-  // Pincode check
-  pincodeBtn.addEventListener("click", () => {
-    const pin = pincodeInput.value.trim();
-    const { charge, eta, message } = calculateShipping(pin);
-
-    currentShippingCharge = charge;
-
-    if (!pin || !/^\d{6}$/.test(pin)) {
-      addressTextEl.textContent = "Please enter a valid 6-digit pincode.";
-      deliveryTextEl.textContent = "Enter pincode";
-    } else {
-      addressTextEl.textContent = `Delivering to ${pin} • ${eta || ""}`.trim();
-      deliveryTextEl.textContent = charge === 0 ? "FREE" : `₹${charge}`;
-    }
-
-    renderCart();
   });
 
   document.addEventListener("DOMContentLoaded", () => {
