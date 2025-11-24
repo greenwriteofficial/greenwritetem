@@ -9,11 +9,16 @@
   <style>
     :root {
       --green: #4cd964;
+      --green-dark: #2bbf4a;
+      --cream: #fff8eb;
       --navy: #050816;
+      --text-dark: #141414;
+      --text-muted: #4a4a4a;
+      --radius-lg: 1.5rem;
+      --shadow-soft: 0 14px 30px rgba(0, 0, 0, 0.18);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: "Poppins", sans-serif;
       background:#f5f7fb;
@@ -23,14 +28,14 @@
 
     a { text-decoration:none; color:inherit; }
 
-    /* NAVBAR -------------------------------------------------- */
+    /* =================== NAVBAR =================== */
 
     header {
       position:sticky;
       top:0;
-      z-index:40;
+      z-index:50;
       background:rgba(5,8,22,0.96);
-      backdrop-filter:blur(14px);
+      backdrop-filter:blur(16px);
     }
 
     .nav {
@@ -55,10 +60,9 @@
       display:flex;align-items:center;justify-content:center;
       font-size:1.1rem;font-weight:700;color:#050816;
     }
-
     .logo-text {
-      font-weight:700;
       font-size:1.2rem;
+      font-weight:700;
       letter-spacing:0.06em;
       text-transform:uppercase;
     }
@@ -73,116 +77,179 @@
     .nav-links a { color:#f5f5f5; opacity:0.9; }
     .nav-links a:hover { opacity:1; }
 
-    .nav-cta {
+    .nav-cart {
+      position:relative;
+      margin-right:0.4rem;
+      font-size:1.2rem;
+      display:inline-flex;
+      align-items:center;
+    }
+    .nav-cart-count {
+      position:absolute;
+      top:-0.4rem;
+      right:-0.6rem;
+      background:#ff4d4f;
+      min-width:16px;
+      height:16px;
+      padding:0 4px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:0.7rem;
+      color:#fff;
+      visibility:hidden;
+    }
+
+    /* ---------- NAV AUTH CSS (Your Standard) ---------- */
+
+    .nav-right {
+      display:flex;
+      align-items:center;
+      gap:1rem;
+    }
+
+    .nav-auth {
+      display:flex;
+      align-items:center;
+      gap:0.6rem;
+    }
+
+    /* Logged-in user info */
+    .user-info {
+      display:flex;
+      align-items:center;
+      gap:0.5rem;
+      font-size:0.85rem;
+      color:#e6f3ff;
+      max-width:160px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .user-info img {
+      width:28px;height:28px;
+      border-radius:999px;
+      object-fit:cover;
+      border:2px solid rgba(144,255,158,0.9);
+      box-shadow:0 0 0 1px rgba(9,255,120,0.4);
+    }
+
+    /* Shared button style */
+    .nav-btn {
+      border-radius:999px;
+      padding:0.45rem 0.95rem;
+      border:1px solid #2f3545;
+      background:transparent;
+      color:#f5f7ff;
+      font-size:0.8rem;
+      font-weight:500;
       display:inline-flex;
       align-items:center;
       gap:0.35rem;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .nav-btn-login {
+      border-color:rgba(76,217,100,0.65);
+      box-shadow:0 0 0 1px rgba(76,217,100,0.25);
+    }
+    .nav-btn-login:hover {
+      background:#32d774;
+      color:#04110a;
+      box-shadow:0 8px 18px rgba(50,215,116,0.55);
+      transform:translateY(-1px);
+    }
+    .nav-btn-logout {
+      border-color:rgba(255,119,119,0.6);
+      color:#ffd4d4;
+    }
+    .nav-btn-logout:hover {
+      background:#ff6b6b;
+      color:#1b0505;
+      transform:translateY(-1px);
+    }
+
+    .nav-cta {
       padding:0.55rem 1.3rem;
       border-radius:999px;
       background:#00c26f;
       font-size:0.9rem;
       font-weight:600;
-      color:#ffffff;
-      box-shadow:0 12px 22px rgba(0,194,111,0.4);
-    }
-
-    .nav-cart {
-      position:relative;
-      font-size:1.2rem;
-      margin-right:0.4rem;
-    }
-
-    .nav-cart-count {
-      position:absolute;
-      top:-0.4rem;
-      right:-0.6rem;
-      min-width:18px;
-      padding:0 4px;
-      height:18px;
-      border-radius:999px;
-      background:#ff4d4f;
-      font-size:0.7rem;
-      display:flex;
-      align-items:center;
-      justify-content:center;
       color:#fff;
-      visibility:hidden; /* shown by JS */
+      box-shadow:0 12px 22px rgba(0,194,111,0.4);
+      display:inline-flex;
+      align-items:center;
+      gap:0.4rem;
     }
 
     /* Hamburger */
-
     .nav-toggle {
       display:none;
-      width:36px;height:32px;
-      border:none;background:transparent;
+      width:30px;height:22px;
+      background:none;border:none;
       flex-direction:column;
-      justify-content:center;
-      gap:5px;
+      justify-content:space-between;
       cursor:pointer;
     }
     .nav-toggle span {
-      height:2px;
-      border-radius:999px;
-      background:#ffffff;
-      width:100%;
-      transition:transform .2s ease, opacity .2s ease;
+      width:100%;height:2px;
+      background:#fff;border-radius:999px;
+      transition:.2s ease;
     }
     .nav-toggle.is-open span:nth-child(1) {
-      transform:translateY(7px) rotate(45deg);
+      transform:translateY(8px) rotate(45deg);
     }
     .nav-toggle.is-open span:nth-child(2) {
       opacity:0;
     }
     .nav-toggle.is-open span:nth-child(3) {
-      transform:translateY(-7px) rotate(-45deg);
+      transform:translateY(-8px) rotate(-45deg);
     }
 
     @media (max-width:900px) {
       .nav-toggle { display:flex; }
       .nav-links {
-        position:absolute;
-        inset:56px 1.2rem auto 1.2rem;
+        position:fixed;
+        top:56px;
+        left:0;right:0;
         background:#0f1220;
-        border-radius:1rem;
-        padding:0.9rem 1.1rem;
         flex-direction:column;
         align-items:flex-start;
-        gap:0.8rem;
+        gap:1rem;
+        padding:1rem 1.5rem;
+        transform:translateY(-120%);
         opacity:0;
         pointer-events:none;
-        transform:translateY(-6px);
-        transition:opacity .18s ease, transform .18s ease;
+        transition:.25s;
       }
       .nav-links.is-open {
+        transform:translateY(0);
         opacity:1;
         pointer-events:auto;
-        transform:translateY(0);
       }
+
+      .nav-right { gap:0.5rem; }
+      .user-info span { display:none; }
+      .nav-btn span:nth-child(2) { display:none; }
+      .nav-btn { padding:0.35rem 0.5rem; }
     }
 
-    /* HERO -------------------------------------------------- */
+    /* =================== PRODUCT PAGE =================== */
 
     .product-hero {
-      background:#00a7b8;
-      background-image:linear-gradient(120deg,#00a7b8 0%,#00c26f 50%,#00a7b8 100%);
-      color:#ffffff;
-      padding:2.8rem 1.5rem 2.4rem;
+      background:linear-gradient(120deg,#00a7b8 0%,#00c26f 50%,#00a7b8 100%);
+      color:#fff;
+      padding:3rem 1.5rem 2.5rem;
     }
     .product-hero-inner {
       max-width:1200px;
       margin:0 auto;
     }
     .product-hero-title {
-      font-size:clamp(1.9rem,3vw,2.3rem);
+      font-size:clamp(2rem,3vw,2.6rem);
       font-weight:700;
-      margin-bottom:0.2rem;
     }
-    .product-breadcrumb {
-      font-size:0.9rem;
-      opacity:0.95;
-    }
-
-    /* MAIN PRODUCT ------------------------------------------ */
 
     .product-main {
       padding:3rem 1.5rem 4rem;
@@ -191,40 +258,34 @@
       max-width:1200px;
       margin:0 auto;
       display:grid;
-      grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+      grid-template-columns:1.1fr 1fr;
       gap:2.5rem;
     }
     .product-img-card {
-      background:#ffffff;
+      background:#fff;
       border-radius:1.6rem;
       padding:1.8rem;
       box-shadow:0 16px 30px rgba(0,0,0,0.12);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height:260px;
+      display:flex;justify-content:center;align-items:center;
+      min-height:280px;
     }
     .product-img-card img {
-      max-width:100%;
-      max-height:280px;
+      max-height:300px;
       object-fit:contain;
     }
 
     .product-title {
-      font-size:1.7rem;
-      font-weight:700;
-      margin-bottom:0.4rem;
+      font-size:1.7rem;font-weight:700;
     }
     .product-tag-pill {
-      display:inline-block;
-      margin-top:0.2rem;
+      margin:0.5rem 0;
       font-size:0.75rem;
-      text-transform:uppercase;
-      letter-spacing:0.14em;
-      color:#0b9445;
       background:#e7ffe9;
-      padding:0.2rem 0.7rem;
+      padding:0.25rem 0.8rem;
       border-radius:999px;
+      text-transform:uppercase;
+      color:#0b9445;
+      letter-spacing:0.15em;
     }
     .product-price {
       font-size:1.5rem;
@@ -243,13 +304,11 @@
       gap:0.5rem;
       margin-bottom:1.2rem;
     }
-    .qty-row span { font-size:0.9rem; }
     .qty-input {
       width:60px;
-      border-radius:999px;
-      border:1px solid #dde3ef;
       padding:0.4rem 0.6rem;
-      font-size:0.9rem;
+      border:1px solid #dde3ef;
+      border-radius:999px;
       text-align:center;
     }
 
@@ -258,40 +317,26 @@
       border-radius:999px;
       border:none;
       font-weight:600;
-      font-size:0.95rem;
       background:#00c26f;
       color:#053117;
-      cursor:pointer;
-      box-shadow:0 18px 32px rgba(76,217,100,0.45);
     }
-    .btn-primary:hover {
-      background:#2bbf4a;
-    }
+    .btn-primary:hover { background:#2bbf4a; }
 
-    .product-meta {
-      margin-top:1.4rem;
+    footer {
+      padding:2rem;
+      text-align:center;
       font-size:0.9rem;
-      color:#555;
+      color:#666;
     }
 
     @media (max-width:900px) {
-      .product-inner {
-        grid-template-columns:minmax(0,1fr);
-      }
-      .product-main { padding-top:2.4rem; }
-    }
-
-    footer {
-      padding:2rem 1.5rem 3rem;
-      text-align:center;
-      font-size:0.85rem;
-      color:#666;
+      .product-inner { grid-template-columns:1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
+  <!-- =================== NAVBAR =================== -->
   <header>
     <nav class="nav">
       <div class="nav-left">
@@ -301,10 +346,8 @@
         </a>
       </div>
 
-      <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
+      <button class="nav-toggle" id="navToggle">
+        <span></span><span></span><span></span>
       </button>
 
       <div class="nav-links" id="navLinks">
@@ -313,42 +356,34 @@
         <a href="products.html">Products</a>
         <a href="index.html#contact">Contact</a>
 
-        <!-- Cart icon -->
         <a href="cart.html" class="nav-cart">
-          🛒
-          <span id="cartCount" class="nav-cart-count">0</span>
+          🛒 <span id="cartCount" class="nav-cart-count">0</span>
         </a>
 
         <div class="nav-right">
-  <!-- Auth area -->
-  <div class="nav-auth">
-    <div id="userBox" class="user-info"></div>
+          <div class="nav-auth">
+            <div id="userBox" class="user-info"></div>
 
-    <button id="loginBtn" class="nav-btn nav-btn-login" onclick="googleLogin()">
-      <span class="nav-btn-icon">🔒</span>
-      <span>Login with Google</span>
-    </button>
+            <button id="loginBtn" class="nav-btn nav-btn-login" onclick="googleLogin()">
+              <span>🔒</span><span>Login with Google</span>
+            </button>
 
-    <button id="logoutBtn" class="nav-btn nav-btn-logout" onclick="logoutUser()" style="display:none;">
-      <span class="nav-btn-icon">👋</span>
-      <span>Logout</span>
-    </button>
-  </div>
+            <button id="logoutBtn" class="nav-btn nav-btn-logout" onclick="logoutUser()" style="display:none;">
+              <span>👋</span><span>Logout</span>
+            </button>
+          </div>
 
-  <!-- your existing Inquire Now button -->
-  <a
-    href="https://wa.me/918287734776?text=Hi%20GreenWrite!%20I%27d%20like%20to%20know%20more%20about%20your%20plantable%20pens%20and%20gifting%20solutions."
-    class="nav-cta"
-    target="_blank"
-    rel="noopener"
-  >
-    <span>📞</span> Inquire Now
-  </a>
-</div>
+          <a
+            href="https://wa.me/918287734776?text=I%20want%20to%20know%20more%20about%20GreenWrite%20products"
+            class="nav-cta" target="_blank">
+            📞 Inquire Now
+          </a>
+        </div>
+      </div>
     </nav>
   </header>
 
-  <!-- HERO -->
+  <!-- =================== HERO =================== -->
   <section class="product-hero">
     <div class="product-hero-inner">
       <h1 id="heroTitle" class="product-hero-title">Product</h1>
@@ -356,17 +391,18 @@
     </div>
   </section>
 
-  <!-- MAIN -->
+  <!-- =================== MAIN PRODUCT =================== -->
   <main class="product-main">
     <div class="product-inner">
+
       <div class="product-img-card">
         <img id="productImage" src="" alt="Product image">
       </div>
 
       <div>
-        <h2 id="productTitle" class="product-title">Product name</h2>
+        <h2 id="productTitle" class="product-title"></h2>
         <div id="productTag" class="product-tag-pill"></div>
-        <div id="productPrice" class="product-price">₹0</div>
+        <div id="productPrice" class="product-price"></div>
         <p id="productDescription" class="product-desc"></p>
 
         <div class="qty-row">
@@ -376,7 +412,7 @@
 
         <button id="addToCartBtn" class="btn-primary">Add to cart</button>
 
-        <div id="productMeta" class="product-meta"></div>
+        <div id="productMeta" class="product-desc" style="margin-top:1rem;"></div>
       </div>
     </div>
   </main>
@@ -385,138 +421,74 @@
     © <span id="year"></span> GreenWrite. All rights reserved.
   </footer>
 
-  <!-- DATA & CART -->
+  <!-- =================== SCRIPTS =================== -->
   <script src="products-data.js"></script>
   <script src="cart.js"></script>
 
   <script>
-  // Footer year
-  document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-  // Helpers
-  function getQueryParam(name) {
-    const params = new URLSearchParams(window.location.search);
-    return params.get(name);
-  }
-
-  function formatPrice(num) {
-    return num.toLocaleString("en-IN");
-  }
-
-  // Get product from ?id=
-  const id = getQueryParam("id");
-  // IMPORTANT: use PRODUCTS directly, not window.PRODUCTS
-  const product = (typeof PRODUCTS !== "undefined" ? PRODUCTS : []).find(
-    p => p.id === id
-  );
-
-  // Grab DOM elements
-  const heroTitle      = document.getElementById("heroTitle");
-  const heroBreadcrumb = document.getElementById("heroBreadcrumb");
-  const imgEl          = document.getElementById("productImage");
-  const titleEl        = document.getElementById("productTitle");
-  const tagEl          = document.getElementById("productTag");
-  const priceEl        = document.getElementById("productPrice");
-  const descEl         = document.getElementById("productDescription");
-  const metaEl         = document.getElementById("productMeta");
-  const qtyInput       = document.getElementById("qtyInput");
-  const addBtn         = document.getElementById("addToCartBtn");
-
-  if (!product) {
-    // Wrong / missing id
-    heroTitle.textContent = "Product not found";
-    heroBreadcrumb.textContent = "Home › Shop";
-    titleEl.textContent = "Product not found";
-    priceEl.textContent = "₹0";
-    descEl.textContent =
-      "We couldn’t find this product. Please go back to the shop.";
-    imgEl.alt = "No product";
-  } else {
-    // HERO
-    heroTitle.textContent = product.name;
-    heroBreadcrumb.textContent = `Home › Shop › ${product.name}`;
-
-    // IMAGE
-    if (product.image) {
-      imgEl.src = product.image;
-      imgEl.alt = product.name;
+    function getQueryParam(n) {
+      return new URLSearchParams(window.location.search).get(n);
     }
 
-    // TITLE + TAG
-    titleEl.textContent = product.name;
-    if (product.tagLabel || product.category) {
-      tagEl.textContent = product.tagLabel || product.category;
-      tagEl.style.display = "inline-block";
+    const id = getQueryParam("id");
+    const product = PRODUCTS.find(p => p.id === id);
+
+    const heroTitle = document.getElementById("heroTitle");
+    const heroBreadcrumb = document.getElementById("heroBreadcrumb");
+    const imgEl    = document.getElementById("productImage");
+    const titleEl  = document.getElementById("productTitle");
+    const tagEl    = document.getElementById("productTag");
+    const priceEl  = document.getElementById("productPrice");
+    const descEl   = document.getElementById("productDescription");
+    const metaEl   = document.getElementById("productMeta");
+    const qtyInput = document.getElementById("qtyInput");
+    const addBtn   = document.getElementById("addToCartBtn");
+
+    if (!product) {
+      heroTitle.textContent = "Product Not Found";
+      titleEl.textContent = "Product Not Found";
+      priceEl.textContent = "₹0";
+      descEl.textContent = "This product does not exist.";
     } else {
-      tagEl.style.display = "none";
+      heroTitle.textContent = product.name;
+      heroBreadcrumb.textContent = `Home › Shop › ${product.name}`;
+      titleEl.textContent = product.name;
+
+      imgEl.src = product.image || "";
+      tagEl.textContent = product.tagLabel || product.category || "";
+      descEl.textContent = product.description || product.short || "";
+
+      if (product.mrp && product.mrp > product.price) {
+        const off = Math.round(((product.mrp - product.price) / product.mrp) * 100);
+        priceEl.innerHTML = `
+          ₹${product.price}
+          <span style="text-decoration:line-through;margin-left:6px;color:#777;">₹${product.mrp}</span>
+          <span style="margin-left:6px;color:#059b52;font-weight:600;">${off}% off</span>
+        `;
+      } else {
+        priceEl.textContent = `₹${product.price}`;
+      }
+
+      metaEl.textContent = (product.badge ? "Highlight: " + product.badge : "") +
+                           (product.category ? " • Category: " + product.category : "");
+
+      addBtn.addEventListener("click", () => {
+        addToCart(product.id, parseInt(qtyInput.value) || 1);
+        alert("Added to cart!");
+      });
     }
-
-    // PRICE + MRP + % OFF
-    const price = product.price;
-    const mrp   = product.mrp || product.price;
-
-    if (mrp > price) {
-      const offPercent = Math.round(((mrp - price) / mrp) * 100);
-      priceEl.innerHTML = `
-        ₹${formatPrice(price)}
-        <span style="
-          font-size:.9rem;
-          font-weight:500;
-          color:#888;
-          margin-left:.4rem;
-          text-decoration:line-through;">
-          ₹${formatPrice(mrp)}
-        </span>
-        <span style="
-          font-size:.85rem;
-          font-weight:600;
-          color:#059b52;
-          margin-left:.4rem;">
-          ${offPercent}% off
-        </span>
-      `;
-    } else {
-      priceEl.textContent = `₹${formatPrice(price)}`;
-    }
-
-    // DESCRIPTION + META
-    descEl.textContent = product.description || product.short || "";
-    metaEl.textContent = [
-      product.badge ? `Highlight: ${product.badge}` : "",
-      product.category ? `Category: ${product.category}` : ""
-    ].filter(Boolean).join(" • ");
-
-    // ADD TO CART
-    addBtn.addEventListener("click", () => {
-      const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
-      addToCart(product.id, qty); // from cart.js
-      alert("Added to cart!");
-    });
-  }
 
     // Mobile nav toggle
-    (function () {
-      const navToggle = document.getElementById("navToggle");
-      const navLinks  = document.getElementById("navLinks");
-      if (!navToggle || !navLinks) return;
-
-      navToggle.addEventListener("click", () => {
-        navToggle.classList.toggle("is-open");
-        navLinks.classList.toggle("is-open");
-      });
-
-      navLinks.querySelectorAll("a").forEach(link => {
-        link.addEventListener("click", () => {
-          navToggle.classList.remove("is-open");
-          navLinks.classList.remove("is-open");
-        });
-      });
-    })();
+    const navToggle = document.getElementById("navToggle");
+    const navLinks  = document.getElementById("navLinks");
+    navToggle.addEventListener("click", () => {
+      navToggle.classList.toggle("is-open");
+      navLinks.classList.toggle("is-open");
+    });
   </script>
+
   <script type="module" src="auth.js"></script>
 </body>
 </html>
-
-
-
-
