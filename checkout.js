@@ -1,4 +1,4 @@
-// checkout.js – uses cart.js + PRODUCTS and shows correct line prices
+// checkout.js – uses getCartDetails() from cart.js for all prices
 
 function getCurrentUserSafe() {
   try {
@@ -11,108 +11,52 @@ function getCurrentUserSafe() {
   }
 }
 
-// Try to fetch raw cart array from multiple sources
-function getRawCartArray() {
-  // 1) If cart.js exposes getCartDetails()
-  if (typeof window.getCartDetails === "function") {
-    try {
-      const details = window.getCartDetails();
-      if (details && Array.isArray(details.cart)) {
-        return details.cart;
-      }
-    } catch (e) {
-      console.warn("Error calling getCartDetails:", e);
-    }
+// Use ONLY cart.js data
+function getCartSummaryFromCartJs() {
+  if (typeof window.getCartDetails !== "function") {
+    console.warn("getCartDetails not found (cart.js not loaded?)");
+    return {
+      cartItems: [],
+      itemsCount: 0,
+      mrpTotal: 0,
+      priceTotal: 0,
+      discount: 0,
+    };
   }
 
-  // 2) If cart.js exposes getCart()
-  if (typeof window.getCart === "function") {
-    try {
-      const c = window.getCart();
-      if (Array.isArray(c)) return c;
-    } catch (e) {
-      console.warn("Error calling getCart:", e);
-    }
-  }
+  // cart.js should return: { cart, itemsCount, mrpTotal, priceTotal, discount }
+  const details = window.getCartDetails() || {};
+  const rawCart = Array.isArray(details.cart) ? details.cart : [];
 
-  // 3) Fallback: read from localStorage by common keys
-  const possibleKeys = ["gwCart_guest", "gwCart", "cart", "greenwrite_cart"];
-  for (const key of possibleKeys) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) continue;
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length) return parsed;
-      if (parsed && Array.isArray(parsed.items) && parsed.items.length) {
-        return parsed.items;
-      }
-    } catch (e) {
-      // ignore parse errors
-    }
-  }
-
-  return [];
-}
-
-// Build a clean summary object from whatever cart structure we find
-function computeCartSummary() {
-  const rawCart = getRawCartArray();
-
-  let cartItems = [];
-  let itemsCount = 0;
-  let mrpTotal = 0;
-  let priceTotal = 0;
-
-  rawCart.forEach((item) => {
+  const cartItems = rawCart.map((item) => {
+    // We TRUST cart.js to give us correct name, price, mrp, qty
     const productId = item.productId ?? item.id ?? item.productID;
+    const name = item.name || item.title || `Item ${productId}`;
     const qty = item.qty ?? item.quantity ?? 1;
+    const price = item.price ?? 0;       // 👈 this is what totals already use
+    const mrp = item.mrp ?? price;       // fallback
 
-    let price = item.price ?? 0;
-    let mrp = item.mrp ?? price;
-    let name = item.name || item.title || `Item ${productId}`;
-
-    // Try to override with product info from PRODUCTS
-    if (Array.isArray(window.PRODUCTS) && productId != null) {
-      const prod = window.PRODUCTS.find(
-        (p) =>
-          String(p.id) === String(productId) ||
-          String(p.productId) === String(productId)
-      );
-      if (prod) {
-        name = prod.name || name;
-        // IMPORTANT: take price from product list
-        price = prod.price ?? prod.mrp ?? price ?? 0;
-        mrp = prod.mrp ?? prod.price ?? price;
-      }
-    }
-
-    cartItems.push({
+    return {
       productId,
       name,
       qty,
       price,
       mrp,
       supplierId: item.supplierId || "default-supplier",
-    });
-
-    itemsCount += qty;
-    mrpTotal += mrp * qty;
-    priceTotal += price * qty;
+    };
   });
-
-  const discount = mrpTotal - priceTotal;
 
   return {
     cartItems,
-    itemsCount,
-    mrpTotal,
-    priceTotal,
-    discount: discount < 0 ? 0 : discount,
+    itemsCount: details.itemsCount ?? 0,
+    mrpTotal: details.mrpTotal ?? 0,
+    priceTotal: details.priceTotal ?? 0,
+    discount: details.discount ?? 0,
   };
 }
 
 function renderOrderSummary() {
-  const summary = computeCartSummary();
+  const summary = getCartSummaryFromCartJs();
 
   const itemsContainer = document.getElementById("orderItems");
   const mrpEl = document.getElementById("summaryMrp");
@@ -135,7 +79,7 @@ function renderOrderSummary() {
     return;
   }
 
-  // Render line items
+  // Render each line using item.price from cart.js
   itemsContainer.innerHTML = "";
   summary.cartItems.forEach((item) => {
     const row = document.createElement("div");
@@ -163,12 +107,12 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("checkout.js loaded");
   renderOrderSummary();
 
-  // Update navbar cart count if available
+  // Update navbar cart badge
   if (typeof window.updateCartCount === "function") {
     window.updateCartCount();
   }
 
-  // Prefill email if user logged in
+  // Prefill email if Google user exists
   const currentUser = getCurrentUserSafe();
   const emailInput = document.getElementById("email");
   if (currentUser && currentUser.email && emailInput) {
@@ -184,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const summary = computeCartSummary();
+    const summary = getCartSummaryFromCartJs();
     if (!summary.cartItems.length) {
       alert("Your cart is empty.");
       return;
@@ -218,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Demo submit only. Next step: connect Firebase orders.";
     }
 
-    // Just clear cart for now
+    // TEMP: just clear cart; next step we’ll save to Firestore + send emails
     if (typeof window.clearCart === "function") {
       window.clearCart();
     }
