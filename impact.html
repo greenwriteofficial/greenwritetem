@@ -27,6 +27,10 @@
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: "Poppins", sans-serif;
       color: var(--text-dark);
@@ -44,7 +48,7 @@
       display: block;
     }
 
-    /* -------- NAVBAR (desktop) -------- */
+    /* ========= NAVBAR ========= */
 
     header {
       position: sticky;
@@ -100,10 +104,12 @@
     .nav-links a {
       color: #f5f5f5;
       opacity: 0.9;
+      transition: opacity 0.18s ease, transform 0.18s ease;
     }
 
     .nav-links a:hover {
       opacity: 1;
+      transform: translateY(-1px);
     }
 
     .nav-links .active {
@@ -122,22 +128,7 @@
       background: #00c26f;
     }
 
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.55rem 1.3rem;
-      border-radius: 999px;
-      background: #00c26f;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #ffffff;
-      box-shadow: 0 12px 22px rgba(0, 194, 111, 0.4);
-    }
-
-    .nav-cta span {
-      font-size: 1rem;
-    }
+    /* Cart icon */
 
     .nav-cart {
       position: relative;
@@ -146,6 +137,12 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .nav-cart:hover {
+      transform: translateY(-1px);
     }
 
     .nav-cart-count {
@@ -160,7 +157,7 @@
       font-weight: 600;
       min-width: 14px;
       text-align: center;
-      visibility: hidden; /* hidden when count is 0 */
+      visibility: hidden; /* show via JS when count > 0 */
     }
 
     /* ---------- NAV AUTH (Google login) ---------- */
@@ -169,6 +166,7 @@
       display: flex;
       align-items: center;
       gap: 1rem;
+      margin-left: 0.8rem;
     }
 
     .nav-auth {
@@ -177,7 +175,6 @@
       gap: 0.6rem;
     }
 
-    /* Logged-in user info (avatar + name) */
     .user-info {
       display: flex;
       align-items: center;
@@ -199,14 +196,12 @@
       box-shadow: 0 0 0 1px rgba(9, 255, 120, 0.4);
     }
 
-    /* Shared button style */
     .nav-btn {
       border-radius: 999px;
       padding: 0.45rem 0.95rem;
       border: 1px solid #2f3545;
       background: transparent;
       color: #f5f7ff;
-      font-family: inherit;
       font-size: 0.8rem;
       font-weight: 500;
       display: inline-flex;
@@ -222,11 +217,6 @@
         transform 0.12s ease;
     }
 
-    .nav-btn-icon {
-      font-size: 0.9rem;
-    }
-
-    /* Login button: green accent */
     .nav-btn-login {
       border-color: rgba(76, 217, 100, 0.65);
       box-shadow: 0 0 0 1px rgba(76, 217, 100, 0.25);
@@ -239,7 +229,6 @@
       transform: translateY(-1px);
     }
 
-    /* Logout button: subtle red accent */
     .nav-btn-logout {
       border-color: rgba(255, 119, 119, 0.6);
       color: #ffd4d4;
@@ -252,7 +241,28 @@
       transform: translateY(-1px);
     }
 
-    /* HAMBURGER BUTTON (hidden on desktop) */
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.3rem;
+      border-radius: 999px;
+      background: #00c26f;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ffffff;
+      box-shadow: 0 12px 22px rgba(0, 194, 111, 0.4);
+      transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .nav-cta:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(0, 194, 111, 0.5);
+    }
+
+    /* HAMBURGER */
+
     .nav-toggle {
       width: 30px;
       height: 22px;
@@ -261,7 +271,7 @@
       border: none;
       padding: 0;
       cursor: pointer;
-      display: none; /* only visible on mobile */
+      display: none;
       flex-direction: column;
       justify-content: space-between;
     }
@@ -275,61 +285,48 @@
       transition: transform 0.25s ease, opacity 0.25s ease;
     }
 
-    /* X animation when menu open */
     .nav-toggle.is-open span:nth-child(1) {
       transform: translateY(10px) rotate(45deg);
     }
+
     .nav-toggle.is-open span:nth-child(2) {
       opacity: 0;
     }
+
     .nav-toggle.is-open span:nth-child(3) {
       transform: translateY(-10px) rotate(-45deg);
     }
 
-    /* -------- BUTTONS -------- */
+    /* ========= ANIMATIONS ========= */
 
-    .btn-primary,
-    .btn-ghost {
-      padding: 0.9rem 1.7rem;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .btn-primary {
-      background: var(--green);
-      box-shadow: 0 18px 32px rgba(76, 217, 100, 0.45);
-      color: #053117;
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 20px 34px rgba(76, 217, 100, 0.55);
-      background: var(--green-dark);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      border: 1px solid #d0e0d2;
-      color: #1c271f;
-    }
-
-    .btn-ghost:hover {
-      background: rgba(0, 0, 0, 0.02);
-      transform: translateY(-1px);
-    }
-
-    /* -------- IMPACT HERO -------- */
+    /* ========= IMPACT HERO ========= */
 
     .impact-hero {
       background: linear-gradient(180deg, #f7fbff 0%, #ffffff 45%, #f6fff5 100%);
       padding: 4.5rem 1.5rem 3.5rem;
+      animation: fadeDown 0.45s ease-out;
     }
 
     .impact-inner {
@@ -391,7 +388,44 @@
       margin-top: 1rem;
     }
 
-    /* Image side */
+    .btn-primary,
+    .btn-ghost {
+      padding: 0.9rem 1.7rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      box-shadow: 0 18px 32px rgba(76, 217, 100, 0.45);
+      color: #053117;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 34px rgba(76, 217, 100, 0.55);
+      background: var(--green-dark);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #d0e0d2;
+      color: #1c271f;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(0, 0, 0, 0.02);
+      transform: translateY(-1px);
+    }
+
+    /* Impact hero image */
 
     .impact-image-wrap {
       display: flex;
@@ -419,7 +453,7 @@
       transform: translateX(-4%);
     }
 
-    /* -------- IMPACT STATS -------- */
+    /* ========= IMPACT STATS ========= */
 
     .impact-stats {
       padding: 0 1.5rem 3.5rem;
@@ -432,6 +466,7 @@
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 1.6rem;
+      animation: fadeUp 0.45s ease-out;
     }
 
     .impact-stat-card {
@@ -469,7 +504,7 @@
       color: #77ffb0;
     }
 
-    /* -------- HOW WE CREATE IMPACT -------- */
+    /* ========= HOW WE CREATE IMPACT ========= */
 
     .impact-how {
       padding: 3rem 1.5rem 4rem;
@@ -479,6 +514,7 @@
     .impact-how-inner {
       max-width: 1200px;
       margin: 0 auto;
+      animation: fadeUp 0.45s ease-out;
     }
 
     .impact-how-header {
@@ -552,7 +588,7 @@
       color: #4a4a4a;
     }
 
-    /* -------- FOOTER -------- */
+    /* ========= FOOTER ========= */
 
     footer {
       background: #2bbf4a;
@@ -607,47 +643,46 @@
       opacity: 0.9;
     }
 
-    /* -------- RESPONSIVE -------- */
+    /* ========= RESPONSIVE ========= */
 
     @media (max-width: 900px) {
-      .nav-toggle {
-        display: flex; /* show hamburger on mobile */
+      .nav {
+        padding: 0.75rem 1rem;
       }
 
-      .nav {
-        padding: 0.7rem 1.1rem;
+      .nav-toggle {
+        display: flex;
       }
 
       .nav-links {
         position: fixed;
-        top: 56px; /* under the navbar */
+        top: 56px;
         left: 0;
         right: 0;
         background: rgba(5, 8, 22, 0.98);
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
-        padding: 1rem 1.5rem 1.6rem;
-        transform: translateY(-120%);
+        padding: 1rem 1.4rem 1.6rem;
+        max-height: 0;
+        overflow: hidden;
         opacity: 0;
         pointer-events: none;
-        transition: transform 0.25s ease, opacity 0.25s ease;
+        transition: max-height 0.25s ease, opacity 0.25s ease;
       }
 
-      .nav-links a,
-      .nav-links .nav-cta {
-        width: 100%;
-      }
-
-      /* visible state when opened via JS */
       .nav-links.is-open {
-        transform: translateY(0);
+        max-height: 340px;
         opacity: 1;
         pointer-events: auto;
       }
 
       .nav-right {
-        gap: 0.5rem;
+        width: 100%;
+        justify-content: flex-start;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        margin-top: 0.6rem;
       }
 
       .user-info span {
@@ -655,7 +690,7 @@
       }
 
       .nav-btn span:nth-child(2) {
-        display: none; /* hide button label, keep icon */
+        display: none;
       }
 
       .nav-btn {
@@ -668,6 +703,7 @@
 
       .impact-image-wrap {
         order: -1;
+        margin-bottom: 1.8rem;
       }
 
       .impact-stats-inner {
@@ -729,22 +765,28 @@
         <a href="index.html#contact">Contact</a>
 
         <div class="nav-right">
+          <!-- Cart -->
+          <a href="cart.html" class="nav-cart" aria-label="Cart">
+            🛒
+            <span id="cartCount" class="nav-cart-count">0</span>
+          </a>
+
           <!-- Auth area -->
           <div class="nav-auth">
             <div id="userBox" class="user-info"></div>
 
             <button id="loginBtn" class="nav-btn nav-btn-login" onclick="googleLogin()">
-              <span class="nav-btn-icon">🔒</span>
-              <span>Login with Google</span>
+              <span>🔒</span>
+              <span>Login</span>
             </button>
 
             <button id="logoutBtn" class="nav-btn nav-btn-logout" onclick="logoutUser()" style="display:none;">
-              <span class="nav-btn-icon">👋</span>
+              <span>👋</span>
               <span>Logout</span>
             </button>
           </div>
 
-          <!-- your existing Inquire Now button -->
+          <!-- Inquire Now button -->
           <a
             href="https://wa.me/918287734776?text=Hi%20GreenWrite!%20I%27d%20like%20to%20know%20more%20about%20your%20plantable%20pens%20and%20gifting%20solutions."
             class="nav-cta"
@@ -804,7 +846,7 @@
 
       <div class="impact-image-wrap">
         <div class="impact-image-circle">
-          <!-- Replace this URL with your own image if you want -->
+          <!-- Replace this with your own image if you want -->
           <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=80"
                alt="Hand holding a green leaf in a forest" />
         </div>
@@ -949,6 +991,7 @@
   </footer>
 
   <!-- SCRIPTS -->
+  <script src="cart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const navToggle = document.getElementById('navToggle');
@@ -972,8 +1015,15 @@
       if (yearSpan) {
         yearSpan.textContent = new Date().getFullYear();
       }
+
+      // Cart badge from cart.js (if available)
+      if (typeof updateCartCount === 'function') {
+        updateCartCount();
+      }
     });
   </script>
+
+  <!-- GOOGLE AUTH -->
   <script type="module" src="auth.js"></script>
 </body>
 </html>
