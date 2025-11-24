@@ -1,4 +1,4 @@
-// checkout.js – non-module version, only uses cart.js
+// checkout.js – uses cart.js + PRODUCTS and shows correct line prices
 
 function getCurrentUserSafe() {
   try {
@@ -11,42 +11,108 @@ function getCurrentUserSafe() {
   }
 }
 
-// Use data from cart.js
-function getCartDetailsFromCartJs() {
-  if (typeof window.getCartDetails !== "function") {
-    console.warn("getCartDetails not found (cart.js not loaded?)");
-    return {
-      cartItems: [],
-      itemsCount: 0,
-      mrpTotal: 0,
-      priceTotal: 0,
-      discount: 0,
-    };
+// Try to fetch raw cart array from multiple sources
+function getRawCartArray() {
+  // 1) If cart.js exposes getCartDetails()
+  if (typeof window.getCartDetails === "function") {
+    try {
+      const details = window.getCartDetails();
+      if (details && Array.isArray(details.cart)) {
+        return details.cart;
+      }
+    } catch (e) {
+      console.warn("Error calling getCartDetails:", e);
+    }
   }
 
-  const { cart, itemsCount, mrpTotal, priceTotal, discount } =
-    window.getCartDetails();
+  // 2) If cart.js exposes getCart()
+  if (typeof window.getCart === "function") {
+    try {
+      const c = window.getCart();
+      if (Array.isArray(c)) return c;
+    } catch (e) {
+      console.warn("Error calling getCart:", e);
+    }
+  }
 
-  // Build items using cart data directly (don’t depend on PRODUCTS)
-  const detailedItems = (cart || []).map((cartItem) => ({
-    productId: cartItem.productId || cartItem.id,
-    name: cartItem.name || `Item ${cartItem.productId || cartItem.id}`,
-    qty: cartItem.qty || 1,
-    price: cartItem.price || 0,
-    supplierId: cartItem.supplierId || "default-supplier",
-  }));
+  // 3) Fallback: read from localStorage by common keys
+  const possibleKeys = ["gwCart_guest", "gwCart", "cart", "greenwrite_cart"];
+  for (const key of possibleKeys) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length) return parsed;
+      if (parsed && Array.isArray(parsed.items) && parsed.items.length) {
+        return parsed.items;
+      }
+    } catch (e) {
+      // ignore parse errors
+    }
+  }
+
+  return [];
+}
+
+// Build a clean summary object from whatever cart structure we find
+function computeCartSummary() {
+  const rawCart = getRawCartArray();
+
+  let cartItems = [];
+  let itemsCount = 0;
+  let mrpTotal = 0;
+  let priceTotal = 0;
+
+  rawCart.forEach((item) => {
+    const productId = item.productId ?? item.id ?? item.productID;
+    const qty = item.qty ?? item.quantity ?? 1;
+
+    let price = item.price ?? 0;
+    let mrp = item.mrp ?? price;
+    let name = item.name || item.title || `Item ${productId}`;
+
+    // Try to override with product info from PRODUCTS
+    if (Array.isArray(window.PRODUCTS) && productId != null) {
+      const prod = window.PRODUCTS.find(
+        (p) =>
+          String(p.id) === String(productId) ||
+          String(p.productId) === String(productId)
+      );
+      if (prod) {
+        name = prod.name || name;
+        // IMPORTANT: take price from product list
+        price = prod.price ?? prod.mrp ?? price ?? 0;
+        mrp = prod.mrp ?? prod.price ?? price;
+      }
+    }
+
+    cartItems.push({
+      productId,
+      name,
+      qty,
+      price,
+      mrp,
+      supplierId: item.supplierId || "default-supplier",
+    });
+
+    itemsCount += qty;
+    mrpTotal += mrp * qty;
+    priceTotal += price * qty;
+  });
+
+  const discount = mrpTotal - priceTotal;
 
   return {
-    cartItems: detailedItems,
+    cartItems,
     itemsCount,
     mrpTotal,
     priceTotal,
-    discount,
+    discount: discount < 0 ? 0 : discount,
   };
 }
 
 function renderOrderSummary() {
-  const summary = getCartDetailsFromCartJs();
+  const summary = computeCartSummary();
 
   const itemsContainer = document.getElementById("orderItems");
   const mrpEl = document.getElementById("summaryMrp");
@@ -69,6 +135,7 @@ function renderOrderSummary() {
     return;
   }
 
+  // Render line items
   itemsContainer.innerHTML = "";
   summary.cartItems.forEach((item) => {
     const row = document.createElement("div");
@@ -96,6 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("checkout.js loaded");
   renderOrderSummary();
 
+  // Update navbar cart count if available
   if (typeof window.updateCartCount === "function") {
     window.updateCartCount();
   }
@@ -116,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const summary = getCartDetailsFromCartJs();
+    const summary = computeCartSummary();
     if (!summary.cartItems.length) {
       alert("Your cart is empty.");
       return;
@@ -128,8 +196,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const address = document.getElementById("address").value.trim();
     const pincode = document.getElementById("pincode").value.trim();
     const paymentMethod =
-      (form.querySelector("input[name='paymentMethod']:checked") || {})
-        .value || "COD";
+      (form.querySelector("input[name='paymentMethod']:checked") || {}).value ||
+      "COD";
 
     if (!fullName || !phone || !email || !address || !pincode) {
       alert("Please fill all the fields.");
@@ -146,16 +214,16 @@ document.addEventListener("DOMContentLoaded", () => {
       buttonEl.textContent = "Placing order…";
     }
     if (statusEl) {
-      statusEl.textContent = "For now, this is a demo. Next step: connect Firebase orders.";
+      statusEl.textContent =
+        "Demo submit only. Next step: connect Firebase orders.";
     }
 
-    // Right now just show success & clear cart.
-    // In the next step we’ll save to Firestore & email suppliers.
+    // Just clear cart for now
     if (typeof window.clearCart === "function") {
       window.clearCart();
     }
 
-    alert("Order placed demo! Next we will connect Firebase + EmailJS.");
+    alert("Order placed (demo). Next we connect Firebase + EmailJS.");
     window.location.href = "index.html";
   });
 });
