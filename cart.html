@@ -13,7 +13,7 @@
       --navy: #050816;
       --text-dark: #141414;
       --text-muted: #4a4a4a;
-      --shadow-soft: 0 14px 30px rgba(0,0,0,0.18);
+      --shadow-soft: 0 14px 30px rgba(0, 0, 0, 0.18);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,103 +28,7 @@
     a { text-decoration:none; color:inherit; }
     img { max-width:100%; display:block; }
 
-    /* =====================================================
-       NAVBAR + GOOGLE AUTH CSS (YOUR ADDED CODE)
-    ====================================================== */
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .nav-auth {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      color: #e6f3ff;
-      max-width: 160px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .user-info img {
-      width: 28px;
-      height: 28px;
-      border-radius: 999px;
-      object-fit: cover;
-      border: 2px solid rgba(144, 255, 158, 0.9);
-      box-shadow: 0 0 0 1px rgba(9, 255, 120, 0.4);
-    }
-
-    .nav-btn {
-      border-radius: 999px;
-      padding: 0.45rem 0.95rem;
-      border: 1px solid #2f3545;
-      background: transparent;
-      color: #f5f7ff;
-      font-family: inherit;
-      font-size: 0.8rem;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      cursor: pointer;
-      outline: none;
-      transition:
-        background 0.18s ease,
-        color 0.18s ease,
-        box-shadow 0.18s ease,
-        border-color 0.18s ease,
-        transform 0.12s ease;
-    }
-
-    .nav-btn-icon {
-      font-size: 0.9rem;
-    }
-
-    .nav-btn-login {
-      border-color: rgba(76,217,100,0.65);
-      box-shadow: 0 0 0 1px rgba(76,217,100,0.25);
-    }
-
-    .nav-btn-login:hover {
-      background: #32d774;
-      color: #04110a;
-      box-shadow: 0 8px 18px rgba(50,215,116,0.55);
-      transform: translateY(-1px);
-    }
-
-    .nav-btn-logout {
-      border-color: rgba(255,119,119,0.6);
-      color: #ffd4d4;
-    }
-
-    .nav-btn-logout:hover {
-      background: #ff6b6b;
-      color: #1b0505;
-      box-shadow: 0 8px 18px rgba(255,107,107,0.55);
-      transform: translateY(-1px);
-    }
-
-    @media (max-width: 900px) {
-      .nav-right { gap: 0.5rem; }
-      .user-info span { display: none; }
-      .nav-btn span:nth-child(2) { display: none; }
-      .nav-btn { padding: 0.35rem 0.5rem; }
-    }
-
-    /* =====================================================
-       NAVBAR STYLING (DEFAULT CART NAVBAR)
-    ====================================================== */
+    /* NAVBAR -------------------------------------------------- */
 
     header {
       position: sticky;
@@ -165,19 +69,137 @@
     }
 
     .nav-cart {
-      position:relative;margin-right:0.4rem;font-size:1.2rem;
-      display:inline-flex;align-items:center;justify-content:center;
+      position: relative;
+      margin-right: 0.4rem;
+      font-size: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .nav-cart-count {
-      position:absolute;top:-0.4rem;right:-0.5rem;
-      background:#ff4b5c;color:#ffffff;border-radius:999px;
-      padding:0 0.25rem;font-size:0.6rem;font-weight:600;
-      min-width:14px;text-align:center;visibility:hidden;
+      position: absolute;
+      top: -0.4rem;
+      right: -0.5rem;
+      background: #ff4b5c;
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 0 0.25rem;
+      font-size: 0.6rem;
+      font-weight: 600;
+      min-width: 14px;
+      text-align: center;
+      visibility: hidden;
     }
 
-    /* =====================================================
-       CART PAGE STYLES (NO CHANGE)
-    ====================================================== */
+    /* ---------- NAV AUTH (Google login) ---------- */
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-auth {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    /* Logged-in user info (avatar + name) */
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: #e6f3ff;
+      max-width: 160px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-info img {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      object-fit: cover;
+      border: 2px solid rgba(144, 255, 158, 0.9);
+      box-shadow: 0 0 0 1px rgba(9, 255, 120, 0.4);
+    }
+
+    /* Shared button style */
+    .nav-btn {
+      border-radius: 999px;
+      padding: 0.45rem 0.95rem;
+      border: 1px solid #2f3545;
+      background: transparent;
+      color: #f5f7ff;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      outline: none;
+      transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.12s ease;
+    }
+
+    .nav-btn-icon {
+      font-size: 0.9rem;
+    }
+
+    /* Login button: green accent */
+    .nav-btn-login {
+      border-color: rgba(76, 217, 100, 0.65);
+      box-shadow: 0 0 0 1px rgba(76, 217, 100, 0.25);
+    }
+
+    .nav-btn-login:hover {
+      background: #32d774;
+      color: #04110a;
+      box-shadow: 0 8px 18px rgba(50, 215, 116, 0.55);
+      transform: translateY(-1px);
+    }
+
+    /* Logout button: subtle red accent */
+    .nav-btn-logout {
+      border-color: rgba(255, 119, 119, 0.6);
+      color: #ffd4d4;
+    }
+
+    .nav-btn-logout:hover {
+      background: #ff6b6b;
+      color: #1b0505;
+      box-shadow: 0 8px 18px rgba(255, 107, 107, 0.55);
+      transform: translateY(-1px);
+    }
+
+    /* Mobile: hide text to save space, keep icons */
+    @media (max-width: 900px) {
+      .nav-right {
+        gap: 0.5rem;
+      }
+
+      .user-info span {
+        display: none;
+      }
+
+      .nav-btn span:nth-child(2) {
+        display: none; /* hide button label, keep icon */
+      }
+
+      .nav-btn {
+        padding: 0.35rem 0.5rem;
+      }
+    }
+
+    /* PAGE LAYOUT --------------------------------------------- */
 
     .cart-page {
       padding: 2.5rem 1.5rem 4rem;
@@ -196,64 +218,243 @@
       margin-bottom: 1rem;
     }
 
+    /* DELIVERY BAR -------------------------------------------- */
+
     .cart-address-bar {
-      background:#ffffff;border-radius:1.2rem;
+      background:#ffffff;
+      border-radius:1.2rem;
       box-shadow:0 8px 18px rgba(0,0,0,0.06);
-      padding:1rem 1.3rem;margin-bottom:1rem;
-      display:flex;align-items:center;justify-content:space-between;
+      padding:1rem 1.3rem;
+      margin-bottom:1rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
       gap:1rem;
     }
-
-    .cart-address-label { font-size:0.85rem;font-weight:600;color:#555;margin-bottom:0.1rem; }
-    .cart-address-text { font-size:0.85rem;color:#666; }
-
+    .cart-address-label {
+      font-size:0.85rem;
+      font-weight:600;
+      color:#555;
+      margin-bottom:0.1rem;
+    }
+    .cart-address-text {
+      font-size:0.85rem;
+      color:#666;
+    }
+    .cart-address-input-wrap {
+      display:flex;
+      gap:0.4rem;
+      align-items:center;
+    }
     #pincodeInput {
-      width:90px;border-radius:999px;border:1px solid #dde3ef;
-      padding:0.4rem 0.7rem;font-size:0.85rem;text-align:center;
+      width:90px;
+      border-radius:999px;
+      border:1px solid #dde3ef;
+      padding:0.4rem 0.7rem;
+      font-size:0.85rem;
+      outline:none;
+      text-align:center;
+    }
+    #pincodeBtn {
+      border-radius:999px;
+      border:none;
+      padding:0.4rem 0.9rem;
+      font-size:0.85rem;
+      font-weight:600;
+      cursor:pointer;
+      background:#00c26f;
+      color:#ffffff;
     }
 
-    #pincodeBtn {
-      border-radius:999px;border:none;padding:0.4rem 0.9rem;
-      background:#00c26f;color:white;font-weight:600;cursor:pointer;
-    }
+    /* LEFT ITEMS ---------------------------------------------- */
 
     .cart-items-card {
-      background:#ffffff;border-radius:1.2rem;
-      box-shadow:0 10px 24px rgba(0,0,0,0.09);overflow:hidden;
+      background:#ffffff;
+      border-radius: 1.2rem;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.09);
+      overflow: hidden;
     }
-
     .cart-items-header {
-      padding:1.1rem 1.3rem;border-bottom:1px solid #edf0f7;
-      font-weight:600;font-size:0.95rem;
+      padding: 1.1rem 1.3rem;
+      border-bottom: 1px solid #edf0f7;
+      font-weight: 600;
+      font-size: 0.95rem;
     }
-
-    .cart-items-body { max-height:65vh;overflow-y:auto; }
+    .cart-items-body {
+      max-height: 65vh;
+      overflow-y: auto;
+    }
 
     .cart-item-row {
-      display:grid;grid-template-columns:110px minmax(0,1fr);
-      gap:1rem;padding:1.1rem 1.3rem;border-bottom:1px solid #f2f3f8;
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+      gap: 1rem;
+      padding: 1.1rem 1.3rem;
+      border-bottom: 1px solid #f2f3f8;
+    }
+    .cart-item-row:last-child { border-bottom:none; }
+
+    .cart-item-imgwrap {
+      width: 100%;
+      border-radius: 0.8rem;
+      overflow: hidden;
+      background: #f3f5fa;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
 
-    /* SUMMARY */
+    .cart-item-main-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.1rem;
+    }
+    .cart-item-meta {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 0.2rem;
+    }
+    .cart-item-seller {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 0.4rem;
+    }
 
-    aside { position:sticky;top:4.5rem; }
+    .cart-item-price-row {
+      display:flex;
+      gap:0.6rem;
+      align-items:baseline;
+      margin-bottom:0.4rem;
+      font-size:0.95rem;
+    }
+    .cart-item-price-current {
+      font-weight:600;
+      font-size:1.05rem;
+    }
+    .cart-item-price-old {
+      font-size:0.85rem;
+      text-decoration: line-through;
+      color:#9a9a9a;
+    }
+    .cart-item-price-off {
+      font-size:0.8rem;
+      color:#059b52;
+      font-weight:600;
+    }
 
+    .cart-item-actions-row {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:0.4rem;
+      font-size:0.85rem;
+    }
+    .qty-control {
+      display:flex;
+      align-items:center;
+      gap:0.4rem;
+    }
+    .qty-btn {
+      width:26px;height:26px;
+      border-radius:999px;
+      border:1px solid #dde2f0;
+      background:#ffffff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-size:1rem;
+    }
+    .qty-value {
+      min-width:32px;
+      text-align:center;
+      border-radius:999px;
+      border:1px solid #dde2f0;
+      padding:0.15rem 0.4rem;
+      font-size:0.85rem;
+    }
+
+    .cart-item-links {
+      display:flex;
+      gap:1rem;
+      font-size:0.82rem;
+      text-transform:uppercase;
+      letter-spacing:0.08em;
+    }
+    .cart-item-link {
+      cursor:pointer;
+      font-weight:600;
+      color:#0b5ed7;
+    }
+    .cart-item-link.remove { color:#d12b35; }
+
+    .cart-empty {
+      padding: 2.5rem 1.3rem 2.8rem;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    /* RIGHT SUMMARY ------------------------------------------- */
+
+    aside {
+      position: sticky;
+      top: 4.5rem;
+    }
     .cart-summary-card {
-      background:#ffffff;border-radius:1.2rem;
+      background:#ffffff;
+      border-radius:1.2rem;
       box-shadow:0 10px 24px rgba(0,0,0,0.09);
-      padding:1.2rem 1.4rem 1.5rem;font-size:0.9rem;
+      padding:1.2rem 1.4rem 1.5rem;
+      font-size:0.9rem;
     }
-
+    .cart-summary-title {
+      font-weight:600;
+      margin-bottom:0.8rem;
+    }
+    .cart-summary-row {
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:0.5rem;
+    }
+    .cart-summary-row.bold {
+      font-weight:600;
+      border-top:1px dashed #e1e4f0;
+      padding-top:0.7rem;
+      margin-top:0.4rem;
+    }
+    .cart-summary-savings {
+      font-size:0.85rem;
+      color:#059b52;
+      margin:0.7rem 0 1rem;
+    }
     .cart-placeorder-btn {
-      width:100%;padding:0.7rem 1rem;border-radius:999px;
-      background:#ff7a1a;color:white;font-weight:600;border:none;
-      box-shadow:0 16px 28px rgba(255,122,26,0.4);cursor:pointer;
+      width:100%;
+      border:none;
+      border-radius:999px;
+      background:#ff7a1a;
+      color:#ffffff;
+      padding:0.7rem 1rem;
+      font-size:0.95rem;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:0 16px 28px rgba(255,122,26,0.4);
       margin-bottom:0.7rem;
     }
+    .cart-summary-note {
+      font-size:0.8rem;
+      color:#777;
+    }
 
-    @media (max-width:900px) {
-      .cart-inner { grid-template-columns:1fr; }
-      aside { position:static; }
+    /* RESPONSIVE ---------------------------------------------- */
+
+    @media (max-width: 900px) {
+      .cart-inner {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      aside {
+        position: static;
+      }
       .nav-links { display:none; }
     }
   </style>
@@ -262,14 +463,12 @@
 
 <header>
   <nav class="nav">
-
     <div class="nav-left">
       <a href="index.html" style="display:flex;align-items:center;gap:0.6rem;">
         <div class="logo-icon">GW</div>
         <div class="logo-text">GreenWrite</div>
       </a>
     </div>
-
     <div class="nav-links">
       <a href="index.html#about">About us</a>
       <a href="impact.html">Our Impact</a>
@@ -280,42 +479,40 @@
         🛒
         <span id="cartCount" class="nav-cart-count">0</span>
       </a>
-    </div>
 
-    <!-- ===================== NAV RIGHT (GOOGLE LOGIN) ===================== -->
-    <div class="nav-right">
-      <div class="nav-auth">
-        <div id="userBox" class="user-info"></div>
+      <div class="nav-right">
+        <!-- Auth area -->
+        <div class="nav-auth">
+          <div id="userBox" class="user-info"></div>
 
-        <button id="loginBtn" class="nav-btn nav-btn-login" onclick="googleLogin()">
-          <span class="nav-btn-icon">🔒</span>
-          <span>Login with Google</span>
-        </button>
+          <button id="loginBtn" class="nav-btn nav-btn-login" onclick="googleLogin()">
+            <span class="nav-btn-icon">🔒</span>
+            <span>Login with Google</span>
+          </button>
 
-        <button id="logoutBtn" class="nav-btn nav-btn-logout" onclick="logoutUser()" style="display:none;">
-          <span class="nav-btn-icon">👋</span>
-          <span>Logout</span>
-        </button>
+          <button id="logoutBtn" class="nav-btn nav-btn-logout" onclick="logoutUser()" style="display:none;">
+            <span class="nav-btn-icon">👋</span>
+            <span>Logout</span>
+          </button>
+        </div>
+
+        <!-- your existing Inquire Now button -->
+        <a
+          href="https://wa.me/918287734776?text=Hi%20GreenWrite!%20I%27d%20like%20to%20know%20more%20about%20your%20plantable%20pens%20and%20gifting%20solutions."
+          class="nav-cta"
+          target="_blank"
+          rel="noopener"
+        >
+          <span>📞</span> Inquire Now
+        </a>
       </div>
-
-      <a
-        href="https://wa.me/918287734776?text=Hi%20GreenWrite!%20I%27d%20like%20to%20know%20more%20about%20your%20plantable%20pens%20and%20gifting%20solutions."
-        class="nav-cta"
-        target="_blank"
-      >
-        📞 Inquire Now
-      </a>
     </div>
-
   </nav>
 </header>
 
-<!-- ===================== CART PAGE CONTENT (UNCHANGED) ===================== -->
-
 <main class="cart-page">
   <div class="cart-inner">
-
-    <!-- LEFT SECTION -->
+    <!-- LEFT -->
     <section>
       <h1 class="cart-heading">My Cart</h1>
 
@@ -338,7 +535,7 @@
       </div>
     </section>
 
-    <!-- RIGHT SUMMARY -->
+    <!-- RIGHT -->
     <aside>
       <div class="cart-summary-card">
         <div class="cart-summary-title">PRICE DETAILS</div>
@@ -347,12 +544,10 @@
           <span>Price (<span id="summaryItemsCount">0</span> item)</span>
           <span>₹<span id="summaryMrp">0</span></span>
         </div>
-
         <div class="cart-summary-row">
           <span>Discount</span>
           <span style="color:#059b52;">- ₹<span id="summaryDiscount">0</span></span>
         </div>
-
         <div class="cart-summary-row">
           <span>Delivery</span>
           <span id="summaryDeliveryText">Enter pincode</span>
@@ -367,28 +562,200 @@
           You will save ₹0 on this order
         </div>
 
-        <button class="cart-placeorder-btn">Place Order</button>
+        <button class="cart-placeorder-btn" onclick="alert('Demo only – connect real payment later.')">
+          Place Order
+        </button>
 
         <div class="cart-summary-note">
-          Safe and secure payments. 100% eco-friendly products.
+          Safe and secure payments. Easy returns. 100% eco-friendly products by GreenWrite.
         </div>
       </div>
     </aside>
-
   </div>
 </main>
 
-<!-- ===================== CART JS ===================== -->
-
 <script src="products-data.js"></script>
 <script src="cart.js"></script>
-<script type="module" src="auth.js"></script>
-
 <script>
-  // your entire original JS remains same...
-  // (I did NOT remove anything)
-  // Perfectly compatible with Google login + cart logic.
-</script>
+  const cartItemsContainer = document.getElementById("cartItemsContainer");
+  const itemsCountEl       = document.getElementById("summaryItemsCount");
+  const mrpEl              = document.getElementById("summaryMrp");
+  const discountEl         = document.getElementById("summaryDiscount");
+  const totalEl            = document.getElementById("summaryTotal");
+  const savingsTextEl      = document.getElementById("summarySavingsText");
+  const deliveryTextEl     = document.getElementById("summaryDeliveryText");
+  const addressTextEl      = document.getElementById("cartAddressText");
+  const pincodeInput       = document.getElementById("pincodeInput");
+  const pincodeBtn         = document.getElementById("pincodeBtn");
 
+  let currentShippingCharge = 0;
+
+  function formatPrice(num) {
+    return num.toLocaleString("en-IN");
+  }
+
+  function calculateShipping(pin) {
+    if (!/^\d{6}$/.test(pin)) {
+      return { charge: 0, eta: "", message: "Please enter a valid 6-digit pincode." };
+    }
+
+    const prefix = pin.slice(0, 2);
+    let charge, eta;
+
+    if (["11", "12", "13"].includes(prefix)) {
+      charge = 30;
+      eta = "2–4 days";
+    } else if (["40", "41", "42", "56", "57"].includes(prefix)) {
+      charge = 40;
+      eta = "4–7 days";
+    } else {
+      charge = 60;
+      eta = "5–9 days";
+    }
+
+    return {
+      charge,
+      eta,
+      message: charge === 0 ? "FREE delivery" : `₹${charge} • Estimated ${eta}`,
+    };
+  }
+
+  function renderCart() {
+    const cart = getCart();
+    cartItemsContainer.innerHTML = "";
+
+    if (!cart.length) {
+      cartItemsContainer.innerHTML =
+        `<div class="cart-empty">Your cart is empty. Add some GreenWrite products! 🌱</div>`;
+      itemsCountEl.textContent = 0;
+      mrpEl.textContent = "0";
+      discountEl.textContent = "0";
+      totalEl.textContent = "0";
+      deliveryTextEl.textContent = "Enter pincode";
+      savingsTextEl.textContent = "You will save ₹0 on this order";
+      return;
+    }
+
+    let totalItems = 0;
+    let totalPrice = 0;
+    let totalMrp   = 0;
+
+    cart.forEach(item => {
+      const product = PRODUCTS.find(p => p.id === item.id);
+      if (!product) return;
+
+      const qty = item.qty || 1;
+      totalItems += qty;
+
+      const price    = product.price;
+      const mrp      = product.mrp || price;
+      const lineTotal = price * qty;
+      const lineMrp   = mrp * qty;
+      totalPrice += lineTotal;
+      totalMrp   += lineMrp;
+
+      const offPercent = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+
+      const row = document.createElement("div");
+      row.className = "cart-item-row";
+      row.innerHTML = `
+        <div class="cart-item-imgwrap">
+          ${product.image ? `<img src="${product.image}" alt="${product.name}">` : ""}
+        </div>
+        <div>
+          <div class="cart-item-main-title">${product.name}</div>
+          <div class="cart-item-meta">${product.category || ""}</div>
+          <div class="cart-item-seller">Seller: GreenWrite</div>
+
+          <div class="cart-item-price-row">
+            <span class="cart-item-price-current">₹${formatPrice(price)}</span>
+            ${mrp > price ? `<span class="cart-item-price-old">₹${formatPrice(mrp)}</span>` : ""}
+            ${offPercent > 0 ? `<span class="cart-item-price-off">${offPercent}% Off</span>` : ""}
+          </div>
+
+          <div class="cart-item-actions-row">
+            <div class="qty-control">
+              <button class="qty-btn" data-action="dec" data-id="${product.id}">−</button>
+              <div class="qty-value" data-id="${product.id}">${qty}</div>
+              <button class="qty-btn" data-action="inc" data-id="${product.id}">+</button>
+            </div>
+
+            <div class="cart-item-links">
+              <span class="cart-item-link remove" data-action="remove" data-id="${product.id}">
+                REMOVE
+              </span>
+            </div>
+          </div>
+        </div>
+      `;
+      cartItemsContainer.appendChild(row);
+    });
+
+    const totalDiscount = totalMrp - totalPrice;
+    const grandTotal    = totalPrice + currentShippingCharge;
+
+    itemsCountEl.textContent = totalItems;
+    mrpEl.textContent        = formatPrice(totalMrp);
+    discountEl.textContent   = formatPrice(totalDiscount > 0 ? totalDiscount : 0);
+    totalEl.textContent      = formatPrice(grandTotal);
+    savingsTextEl.textContent =
+      `You will save ₹${formatPrice(totalDiscount > 0 ? totalDiscount : 0)} on this order`;
+  }
+
+  // qty / remove click handling
+  cartItemsContainer.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-action]");
+    if (!btn) return;
+
+    const action = btn.getAttribute("data-action");
+    const id     = btn.getAttribute("data-id");
+
+    if (action === "inc") {
+      const cart = getCart();
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty = (item.qty || 1) + 1;
+        saveCart(cart);
+        updateCartCount();
+        renderCart();
+      }
+    } else if (action === "dec") {
+      const cart = getCart();
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty = Math.max(1, (item.qty || 1) - 1);
+        saveCart(cart);
+        updateCartCount();
+        renderCart();
+      }
+    } else if (action === "remove") {
+      removeFromCart(id);
+      renderCart();
+    }
+  });
+
+  // Pincode check
+  pincodeBtn.addEventListener("click", () => {
+    const pin = pincodeInput.value.trim();
+    const { charge, eta, message } = calculateShipping(pin);
+
+    currentShippingCharge = charge;
+
+    if (!pin || !/^\d{6}$/.test(pin)) {
+      addressTextEl.textContent = "Please enter a valid 6-digit pincode.";
+      deliveryTextEl.textContent = "Enter pincode";
+    } else {
+      addressTextEl.textContent = `Delivering to ${pin} • ${eta || ""}`.trim();
+      deliveryTextEl.textContent = charge === 0 ? "FREE" : `₹${charge}`;
+    }
+
+    renderCart();
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderCart();
+  });
+</script>
+<script type="module" src="auth.js"></script>
 </body>
 </html>
