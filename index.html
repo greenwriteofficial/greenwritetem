@@ -98,7 +98,6 @@
       color: #c5c5c5;
     }
 
-    /* small pulsing dot */
     .preloader-dot {
       width: 8px;
       height: 8px;
@@ -114,93 +113,95 @@
     }
 
     /* -------- NAVBAR -------- */
+
     /* HAMBURGER BUTTON */
-.nav-toggle {
-  display: none;           /* hidden on desktop, shown on mobile */
-  width: 28px;
-  height: 20px;
-  margin-left: auto;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  flex-direction: column;
-  justify-content: space-between;
-}
+    .nav-toggle {
+      display: none;           /* hidden on desktop, shown on mobile */
+      width: 28px;
+      height: 20px;
+      margin-left: auto;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-.nav-toggle span {
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: #ffffff;
-  border-radius: 999px;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
+    .nav-toggle span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: #ffffff;
+      border-radius: 999px;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
 
-/* X state */
-.nav-toggle.is-open span:nth-child(1) {
-  transform: translateY(9px) rotate(45deg);
-}
-.nav-toggle.is-open span:nth-child(2) {
-  opacity: 0;
-}
-.nav-toggle.is-open span:nth-child(3) {
-  transform: translateY(-9px) rotate(-45deg);
-}
+    /* X state */
+    .nav-toggle.is-open span:nth-child(1) {
+      transform: translateY(9px) rotate(45deg);
+    }
+    .nav-toggle.is-open span:nth-child(2) {
+      opacity: 0;
+    }
+    .nav-toggle.is-open span:nth-child(3) {
+      transform: translateY(-9px) rotate(-45deg);
+    }
 
-/* MOBILE MENU */
-@media (max-width: 900px) {
-  .nav {
-    padding: 0.75rem 1rem;
-  }
+    /* MOBILE MENU */
+    @media (max-width: 900px) {
+      .nav {
+        padding: 0.75rem 1rem;
+      }
 
-  .nav-toggle {
-    display: flex;
-  }
+      .nav-toggle {
+        display: flex;
+      }
 
-  .nav-links {
-    position: fixed;
-    top: 56px;                  /* just below the navbar */
-    left: 0;
-    right: 0;
-    background: rgba(5, 8, 22, 0.98);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem 1.4rem 1.6rem;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    pointer-events: none;
-    transition: max-height 0.25s ease, opacity 0.25s ease;
-  }
+      .nav-links {
+        position: fixed;
+        top: 56px;                  /* just below the navbar */
+        left: 0;
+        right: 0;
+        background: rgba(5, 8, 22, 0.98);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem 1.4rem 1.6rem;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transition: max-height 0.25s ease, opacity 0.25s ease;
+      }
 
-  .nav-links.is-open {
-    max-height: 260px;          /* enough for all links */
-    opacity: 1;
-    pointer-events: auto;
-  }
+      .nav-links.is-open {
+        max-height: 260px;          /* enough for all links */
+        opacity: 1;
+        pointer-events: auto;
+      }
 
-  .nav-links a,
-  .nav-links .nav-cta {
-    width: 100%;
-  }
-}
-  /* visible state when opened via JS */
-  .nav-links.is-open {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-  }
+      .nav-links a,
+      .nav-links .nav-cta {
+        width: 100%;
+      }
+    }
+
+    /* visible state when opened via JS */
+    .nav-links.is-open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
     
-  header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: rgba(5, 8, 22, 0.96);
-    backdrop-filter: blur(16px);
-  }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(5, 8, 22, 0.96);
+      backdrop-filter: blur(16px);
+    }
 
     .nav {
       max-width: 1200px;
@@ -269,6 +270,114 @@
 
     .nav-cta span {
       font-size: 1rem;
+    }
+
+    /* ---------- NAV AUTH (Google login) ---------- */
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-auth {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    /* Logged-in user info (avatar + name) */
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: #e6f3ff;
+      max-width: 160px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-info img {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      object-fit: cover;
+      border: 2px solid rgba(144, 255, 158, 0.9);
+      box-shadow: 0 0 0 1px rgba(9, 255, 120, 0.4);
+    }
+
+    /* Shared button style */
+    .nav-btn {
+      border-radius: 999px;
+      padding: 0.45rem 0.95rem;
+      border: 1px solid #2f3545;
+      background: transparent;
+      color: #f5f7ff;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      outline: none;
+      transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.12s ease;
+    }
+
+    .nav-btn-icon {
+      font-size: 0.9rem;
+    }
+
+    /* Login button: green accent */
+    .nav-btn-login {
+      border-color: rgba(76, 217, 100, 0.65);
+      box-shadow: 0 0 0 1px rgba(76, 217, 100, 0.25);
+    }
+
+    .nav-btn-login:hover {
+      background: #32d774;
+      color: #04110a;
+      box-shadow: 0 8px 18px rgba(50, 215, 116, 0.55);
+      transform: translateY(-1px);
+    }
+
+    /* Logout button: subtle red accent */
+    .nav-btn-logout {
+      border-color: rgba(255, 119, 119, 0.6);
+      color: #ffd4d4;
+    }
+
+    .nav-btn-logout:hover {
+      background: #ff6b6b;
+      color: #1b0505;
+      box-shadow: 0 8px 18px rgba(255, 107, 107, 0.55);
+      transform: translateY(-1px);
+    }
+
+    /* Mobile: hide text to save space, keep icons */
+    @media (max-width: 900px) {
+      .nav-right {
+        gap: 0.5rem;
+      }
+
+      .user-info span {
+        display: none;
+      }
+
+      .nav-btn span:nth-child(2) {
+        display: none; /* hide button label, keep icon */
+      }
+
+      .nav-btn {
+        padding: 0.35rem 0.5rem;
+      }
     }
 
     /* -------- HERO SECTION -------- */
@@ -432,82 +541,74 @@
     }
 
     .hero-calendar {
-  width: 115px;
-  border-radius: 1.2rem;
-  background: #ffffff;
-  border: 1px solid rgba(255,255,255,0.2);
-  padding: 0.75rem;
-  font-size: 0.68rem;
-  position: absolute;
-  bottom: -1rem;
-  right: 1rem;
-  box-shadow: 0 18px 35px rgba(0,0,0,0.25);
-  backdrop-filter: blur(6px);
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
+      width: 115px;
+      border-radius: 1.2rem;
+      background: #ffffff;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.75rem;
+      font-size: 0.68rem;
+      position: absolute;
+      bottom: -1rem;
+      right: 1rem;
+      box-shadow: 0 18px 35px rgba(0,0,0,0.25);
+      backdrop-filter: blur(6px);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
 
-/* Month + Year */
-.hero-cal-header {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 700;
-  font-size: 0.72rem;
-  color: #111;
-  margin-bottom: 0.2rem;
-}
+    .hero-cal-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 0.72rem;
+      color: #111;
+      margin-bottom: 0.2rem;
+    }
 
-.hero-cal-header #calMonth {
-  color: #c20000;
-}
+    .hero-cal-header #calMonth {
+      color: #c20000;
+    }
 
-/* Weekdays row */
-.hero-cal-week {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-size: 0.55rem;
-  color: #999;
-  margin-bottom: 0.2rem;
-}
+    .hero-cal-week {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.55rem;
+      color: #999;
+      margin-bottom: 0.2rem;
+    }
 
-/* Grid of days */
-.hero-cal-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
-}
+    .hero-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+    }
 
-/* Day style */
-.hero-calendar-day {
-  text-align: center;
-  padding: 2px 0;
-  border-radius: 6px;
-  font-size: 0.6rem;
-  color: #333;
-  transition: 0.2s ease;
-}
+    .hero-calendar-day {
+      text-align: center;
+      padding: 2px 0;
+      border-radius: 6px;
+      font-size: 0.6rem;
+      color: #333;
+      transition: 0.2s ease;
+    }
 
-.hero-calendar-day:hover {
-  background: #e8ffe8;
-  cursor: pointer;
-}
+    .hero-calendar-day:hover {
+      background: #e8ffe8;
+      cursor: pointer;
+    }
 
-/* Empty placeholder cells */
-.hero-calendar-day--empty {
-  visibility: hidden;
-}
+    .hero-calendar-day--empty {
+      visibility: hidden;
+    }
 
-/* Today highlight */
-.hero-calendar-day--today {
-  background: #00c26f;
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba(0, 194, 111, 0.5);
-}
-
-
+    .hero-calendar-day--today {
+      background: #00c26f;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(0, 194, 111, 0.5);
+    }
 
     /* -------- VALUE SECTION -------- */
 
@@ -697,29 +798,28 @@
     }
 
     .nav-cart {
-  position: relative;
-  margin-right: 0.4rem;
-  font-size: 1.2rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
+      position: relative;
+      margin-right: 0.4rem;
+      font-size: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.nav-cart-count {
-  position: absolute;
-  top: -0.4rem;
-  right: -0.5rem;
-  background: #ff4b5c;
-  color: #ffffff;
-  border-radius: 999px;
-  padding: 0 0.25rem;
-  font-size: 0.6rem;
-  font-weight: 600;
-  min-width: 14px;
-  text-align: center;
-  visibility: hidden; /* hidden when count is 0 */
-}
-
+    .nav-cart-count {
+      position: absolute;
+      top: -0.4rem;
+      right: -0.5rem;
+      background: #ff4b5c;
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 0 0.25rem;
+      font-size: 0.6rem;
+      font-weight: 600;
+      min-width: 14px;
+      text-align: center;
+      visibility: hidden; /* hidden when count is 0 */
+    }
 
     /* -------- RESPONSIVE -------- */
 
@@ -777,57 +877,58 @@
   </div>
 
   <!-- NAVBAR -->
-<header>
-  <nav class="nav">
-    <div class="nav-left">
-      <a href="index.html" style="display:flex;align-items:center;gap:0.6rem;">
-        <div class="logo-icon">GW</div>
-        <div class="logo-text">GreenWrite</div>
-      </a>
-    </div>
+  <header>
+    <nav class="nav">
+      <div class="nav-left">
+        <a href="index.html" style="display:flex;align-items:center;gap:0.6rem;">
+          <div class="logo-icon">GW</div>
+          <div class="logo-text">GreenWrite</div>
+        </a>
+      </div>
 
-    <!-- HAMBURGER -->
-    <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+      <!-- HAMBURGER -->
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
 
-    <!-- LINKS -->
-    <div class="nav-links" id="navLinks">
-      <a href="index.html#about">About us</a>
-      <a href="impact.html">Our Impact</a>
-      <a href="products.html">Products</a>
-      <a href="index.html#contact">Contact</a>
-      
-      <div class="nav-right">
-  <!-- Auth area -->
-  <div class="nav-auth">
-    <div id="userBox" class="user-info"></div>
+      <!-- LINKS -->
+      <div class="nav-links" id="navLinks">
+        <a href="index.html#about">About us</a>
+        <a href="impact.html">Our Impact</a>
+        <a href="products.html">Products</a>
+        <a href="index.html#contact">Contact</a>
+        
+        <div class="nav-right">
+          <!-- Auth area -->
+          <div class="nav-auth">
+            <div id="userBox" class="user-info"></div>
 
-    <button id="loginBtn" class="nav-btn nav-btn-login" onclick="googleLogin()">
-      <span class="nav-btn-icon">🔒</span>
-      <span>Login with Google</span>
-    </button>
+            <button id="loginBtn" class="nav-btn nav-btn-login" onclick="googleLogin()">
+              <span class="nav-btn-icon">🔒</span>
+              <span>Login with Google</span>
+            </button>
 
-    <button id="logoutBtn" class="nav-btn nav-btn-logout" onclick="logoutUser()" style="display:none;">
-      <span class="nav-btn-icon">👋</span>
-      <span>Logout</span>
-    </button>
-  </div>
+            <button id="logoutBtn" class="nav-btn nav-btn-logout" onclick="logoutUser()" style="display:none;">
+              <span class="nav-btn-icon">👋</span>
+              <span>Logout</span>
+            </button>
+          </div>
 
-  <!-- your existing Inquire Now button -->
-  <a
-    href="https://wa.me/918287734776?text=Hi%20GreenWrite!%20I%27d%20like%20to%20know%20more%20about%20your%20plantable%20pens%20and%20gifting%20solutions."
-    class="nav-cta"
-    target="_blank"
-    rel="noopener"
-  >
-    <span>📞</span> Inquire Now
-  </a>
-</div>
-  </nav>
-</header>
+          <!-- Inquire Now button -->
+          <a
+            href="https://wa.me/918287734776?text=Hi%20GreenWrite!%20I%27d%20like%20to%20know%20more%20about%20your%20plantable%20pens%20and%20gifting%20solutions."
+            class="nav-cta"
+            target="_blank"
+            rel="noopener"
+          >
+            <span>📞</span> Inquire Now
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
 
   <!-- HERO -->
   <section class="hero">
@@ -845,19 +946,19 @@
         </p>
 
         <div class="hero-actions">
-  <a href="products.html" class="btn-primary">
-    Our Gifting Solutions →
-  </a>
+          <a href="products.html" class="btn-primary">
+            Our Gifting Solutions →
+          </a>
 
-  <a
-    class="btn-ghost"
-    href="https://wa.me/918287734776?text=Hi%20GreenWrite!%20I%27d%20like%20to%20speak%20to%20an%20expert%20about%20eco-friendly%20gifting."
-    target="_blank"
-    rel="noopener"
-  >
-    Speak to an expert 💬
-  </a>
-</div>  
+          <a
+            class="btn-ghost"
+            href="https://wa.me/918287734776?text=Hi%20GreenWrite!%20I%27d%20like%20to%20speak%20to%20an%20expert%20about%20eco-friendly%20gifting."
+            target="_blank"
+            rel="noopener"
+          >
+            Speak to an expert 💬
+          </a>
+        </div>
 
         <p class="hero-note">
           <strong>Made in India</strong> with recycled paper, non-toxic ink and
@@ -866,7 +967,6 @@
       </div>
 
       <div class="hero-image-wrap" aria-hidden="true">
-        <!-- You can replace this card with a real product photo later -->
         <div class="hero-card">
           <div class="hero-card-badge">
             🌱 Seed to Stationery
@@ -890,17 +990,19 @@
         </div>
 
         <div class="hero-calendar" id="miniCalendar">
-  <div class="hero-cal-header">
-    <span id="calMonth"></span>
-    <span id="calYear"></span>
-  </div>
+          <div class="hero-cal-header">
+            <span id="calMonth"></span>
+            <span id="calYear"></span>
+          </div>
 
-  <div class="hero-cal-week">
-    <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-  </div>
+          <div class="hero-cal-week">
+            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+          </div>
 
-  <div class="hero-cal-grid" id="calDays"></div>
-</div>
+          <div class="hero-cal-grid" id="calDays"></div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- VALUE / ABOUT -->
@@ -1060,14 +1162,14 @@
     </div>
   </footer>
 
-    <script src="cart.js"></script>
+  <script src="cart.js"></script>
 
   <!-- Preloader + mini calendar + footer year -->
   <script>
     function renderMiniCalendar() {
       const now = new Date();
       const year = now.getFullYear();
-      const month = now.getMonth(); // 0–11
+      const month = now.getMonth();
       const today = now.getDate();
 
       const monthNames = [
@@ -1084,27 +1186,22 @@
       monthEl.textContent = monthNames[month];
       yearEl.textContent = year;
 
-      // Clear old days
       daysContainer.innerHTML = "";
 
-      const firstDay = new Date(year, month, 1).getDay();   // 0 = Sunday
+      const firstDay = new Date(year, month, 1).getDay();
       const lastDate = new Date(year, month + 1, 0).getDate();
 
-      // Empty cells before day 1
       for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement("span");
         empty.className = "hero-calendar-day hero-calendar-day--empty";
         daysContainer.appendChild(empty);
       }
 
-      // Actual days
       for (let d = 1; d <= lastDate; d++) {
         const dayEl = document.createElement("span");
         dayEl.textContent = d;
         dayEl.className = "hero-calendar-day";
-        if (d === today) {
-          dayEl.classList.add("hero-calendar-day--today");
-        }
+        if (d === today) dayEl.classList.add("hero-calendar-day--today");
         daysContainer.appendChild(dayEl);
       }
     }
@@ -1115,14 +1212,11 @@
         preloader.classList.add("preloader--hide");
       }
       renderMiniCalendar();
-
-      // safety: hide preloader after 4s even if something weird happens
       setTimeout(() => {
         if (preloader) preloader.classList.add("preloader--hide");
       }, 4000);
     });
 
-    // Set current year in footer
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 
@@ -1132,7 +1226,6 @@
       const navToggle = document.querySelector('.nav-toggle');
       const navLinks  = document.querySelector('.nav-links');
 
-      // On desktop navToggle might not exist – that’s fine
       if (!navToggle || !navLinks) return;
 
       navToggle.addEventListener('click', () => {
@@ -1140,7 +1233,6 @@
         navLinks.classList.toggle('is-open');
       });
 
-      // Close menu when clicking a link
       navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
           navToggle.classList.remove('is-open');
@@ -1149,14 +1241,7 @@
       });
     });
   </script>
- <script type="module" src="auth.js"></script>
+
+  <script type="module" src="auth.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
