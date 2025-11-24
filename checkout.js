@@ -15,28 +15,36 @@ function getCurrentUserSafe() {
 
 // Helper to read cart & product data
 function getCartDetailsFromCartJs() {
-  // getCartDetails and findProductById are defined in cart.js (global)
-  if (typeof getCartDetails !== "function") return null;
+  // Use the global function from cart.js explicitly
+  if (typeof window.getCartDetails !== "function") {
+    console.warn("getCartDetails not found on window");
+    return null;
+  }
 
-  const { cart, itemsCount, mrpTotal, priceTotal, discount } = getCartDetails();
+  const { cart, itemsCount, mrpTotal, priceTotal, discount } =
+    window.getCartDetails();
 
-  // Build expanded items with product details + supplierId
-  const detailedItems = (cart || []).map((cartItem) => {
-    const product = window.PRODUCTS.find(
-      (p) => String(p.id) === String(cartItem.productId)
-    );
-    if (!product) return null;
+  // Build expanded items (with product details + supplierId)
+  const detailedItems =
+    (cart || [])
+      .map((cartItem) => {
+        if (!Array.isArray(window.PRODUCTS)) return null;
 
-    return {
-      productId: cartItem.productId,
-      name: product.name,
-      qty: cartItem.qty || 1,
-      price: product.price || 0,
-      mrp: product.mrp || product.price || 0,
-      // For now, single supplier. Later: set real supplierId per product.
-      supplierId: product.supplierId || "default-supplier",
-    };
-  }).filter(Boolean);
+        const product = window.PRODUCTS.find(
+          (p) => String(p.id) === String(cartItem.productId)
+        );
+        if (!product) return null;
+
+        return {
+          productId: cartItem.productId,
+          name: product.name,
+          qty: cartItem.qty || 1,
+          price: product.price || 0,
+          mrp: product.mrp || product.price || 0,
+          supplierId: product.supplierId || "default-supplier",
+        };
+      })
+      .filter(Boolean);
 
   return {
     cartItems: detailedItems,
