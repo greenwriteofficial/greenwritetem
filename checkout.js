@@ -1,4 +1,4 @@
-// checkout.js – uses cart.js + PRODUCTS and shows correct line prices
+// checkout.js – UI + summary + building order object; Firestore call via window.saveOrderToFirebase
 
 function getCurrentUserSafe() {
   try {
@@ -31,7 +31,7 @@ function getRawCartArray() {
       const c = window.getCart();
       if (Array.isArray(c)) return c;
     } catch (e) {
-      console.warn("Error calling getCart:", e);
+      console.warn("Error calling getCart():", e);
     }
   }
 
@@ -80,7 +80,7 @@ function computeCartSummary() {
       );
       if (prod) {
         name = prod.name || name;
-        // IMPORTANT: take price from product list
+        // use product price
         price = prod.price ?? prod.mrp ?? price ?? 0;
         mrp = prod.mrp ?? prod.price ?? price;
       }
@@ -109,6 +109,20 @@ function computeCartSummary() {
     priceTotal,
     discount: discount < 0 ? 0 : discount,
   };
+}
+
+// Split items by supplier for future emails / dashboards
+function buildSupplierSplit(items) {
+  const bySupplier = {};
+  items.forEach((item) => {
+    const sid = item.supplierId || "default-supplier";
+    if (!bySupplier[sid]) {
+      bySupplier[sid] = { items: [], total: 0 };
+    }
+    bySupplier[sid].items.push(item);
+    bySupplier[sid].total += (item.price || 0) * (item.qty || 1);
+  });
+  return bySupplier;
 }
 
 function renderOrderSummary() {
@@ -181,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!form) return;
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const summary = computeCartSummary();
@@ -209,21 +223,77 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (buttonEl) {
-      buttonEl.disabled = true;
-      buttonEl.textContent = "Placing order…";
-    }
-    if (statusEl) {
-      statusEl.textContent =
-        "Demo submit only. Next step: connect Firebase orders.";
-    }
+    const paymentStatus = paymentMethod === "PREPAID" ? "paid" : "pending";
 
-    // Just clear cart for now
-    if (typeof window.clearCart === "function") {
-      window.clearCart();
-    }
+    const orderItems = summary.cartItems;
+    const supplierSplit = buildSupplierSplit(orderItems);
+    const currentUser = getCurrentUserSafe();
 
-    alert("Order placed (demo). Next we connect Firebase + EmailJS.");
-    window.location.href = "index.html";
+    const orderData = {
+      paymentMethod,
+      paymentStatus,
+      totals: {
+        mrpTotal: summary.mrpTotal,
+        priceTotal: summary.priceTotal,
+        discount: summary.discount,
+        itemsCount: summary.itemsCount,
+      },
+      customer: {
+        fullName,
+        phone,
+        email,
+        address,
+        pincode,
+      },
+      user: currentUser || null,
+      items: orderItems,
+      suppliers: supplierSplit,
+    };
+
+    try {
+      if (buttonEl) {
+        buttonEl.disabled = true;
+        buttonEl.textContent = "Placing order…";
+      }
+      if (statusEl) {
+        statusEl.textContent = "Saving your order…";
+      }
+
+      let orderId = null;
+
+      if (typeof window.saveOrderToFirebase === "function") {
+        orderId = await window.saveOrderToFirebase(orderData);
+      } else {
+        console.warn(
+          "saveOrderToFirebase not available, skipping Firestore save"
+        );
+      }
+
+      if (statusEl) {
+        statusEl.textContent = orderId
+          ? `Order placed! ID: ${orderId}`
+          : "Order placed (local only).";
+      }
+
+      // Clear cart
+      if (typeof window.clearCart === "function") {
+        window.clearCart();
+      }
+
+      alert("Your order has been placed! We'll contact you shortly.");
+      window.location.href = "index.html";
+    } catch (err) {
+      console.error("Error placing order:", err);
+      if (statusEl) {
+        statusEl.textContent =
+          "Error placing order. Please refresh the page and try again.";
+      }
+      alert("Something went wrong while placing your order.");
+    } finally {
+      if (buttonEl) {
+        buttonEl.disabled = false;
+        buttonEl.textContent = "Place Order";
+      }
+    }
   });
 });
