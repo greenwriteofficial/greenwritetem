@@ -1,250 +1,404 @@
-// cart.js
+/* =========================================================
+   GreenWrite Cart Logic
+   - Per-user cart (based on Google login from auth.js)
+   - Works with:
+       - index.html
+       - products.html
+       - product.html
+       - cart.html
+   - Uses PRODUCTS from products-data.js
+========================================================= */
 
-const CART_KEY = "greenwrite_cart_v1";
+/* ---------------- Utility: Current user & cart key ---------------- */
 
-/* ================== STORAGE HELPERS ================== */
-
-function readCart() {
+function getCurrentUser() {
   try {
-    const raw = localStorage.getItem(CART_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch (err) {
-    console.error("Error reading cart", err);
+    const raw = localStorage.getItem("gwUser");
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function getCartKey() {
+  const user = getCurrentUser();
+  if (user && user.email) {
+    // Unique cart per user
+    return "gwCart_" + user.email;
+  }
+  // Guest cart
+  return "gwCart_guest";
+}
+
+function loadCart() {
+  try {
+    const raw = localStorage.getItem(getCartKey());
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed;
+  } catch {
     return [];
   }
 }
 
-function writeCart(cart) {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+function saveCart(cart) {
+  localStorage.setItem(getCartKey(), JSON.stringify(cart || []));
 }
 
-/* ================== PUBLIC CART API ================== */
+/* Cart item format:
+   {
+     productId: string,
+     qty: number
+   }
+*/
 
-function getCart() {
-  return readCart();
-}
+/* ---------------- Core Cart Helpers ---------------- */
 
-function getCartCount() {
-  return readCart().reduce((sum, item) => sum + (item.qty || 1), 0);
+function findProductById(id) {
+  if (!Array.isArray(window.PRODUCTS)) return null;
+  return window.PRODUCTS.find((p) => String(p.id) === String(id)) || null;
 }
 
 function addToCart(productId, qty = 1) {
-  const cart = readCart();
-  const existing = cart.find((item) => item.id === productId);
-
-  if (existing) {
-    existing.qty = (existing.qty || 1) + qty;
-  } else {
-    cart.push({ id: productId, qty });
-  }
-
-  writeCart(cart);
-  updateCartBadge();
-}
-
-function removeFromCart(productId) {
-  const cart = readCart().filter((item) => item.id !== productId);
-  writeCart(cart);
-  updateCartBadge();
-}
-
-function setCartQty(productId, qty) {
-  const cart = readCart();
-  const item = cart.find((i) => i.id === productId);
-  if (!item) return;
-
-  item.qty = Math.max(1, parseInt(qty, 10) || 1);
-  writeCart(cart);
-  updateCartBadge();
-}
-
-/* ================== NAVBAR BADGE ================== */
-
-function updateCartBadge() {
-  const badge = document.getElementById("cartCount");
-  if (!badge) return;
-
-  const count = getCartCount();
-  badge.textContent = count;
-  badge.style.visibility = count > 0 ? "visible" : "hidden";
-}
-
-document.addEventListener("DOMContentLoaded", updateCartBadge);
-
-/* ================== CART PAGE RENDER ================== */
-
-function renderCartPage() {
-  // Only run on cart.html
-  if (!document.getElementById("cartItemsContainer")) return;
-  if (!window.PRODUCTS) {
-    console.error("PRODUCTS not found. Is products-data.js loaded before cart.js?");
+  const product = findProductById(productId);
+  if (!product) {
+    console.warn("Product not found for id:", productId);
     return;
   }
 
-  const itemsContainer = document.getElementById("cartItemsContainer");
-  const itemsCountEl = document.getElementById("summaryItemsCount");
-  const mrpEl = document.getElementById("summaryMrp");
-  const discountEl = document.getElementById("summaryDiscount");
-  const totalEl = document.getElementById("summaryTotal");
-  const savingsTextEl = document.getElementById("summarySavingsText");
-  const deliveryTextEl = document.getElementById("summaryDeliveryText");
-  const addressTextEl = document.getElementById("cartAddressText");
-  const pincodeInput = document.getElementById("pincodeInput");
-  const pincodeBtn = document.getElementById("pincodeBtn");
+  const cart = loadCart();
+  const existing = cart.find((item) => item.productId === productId);
 
-  let currentShippingCharge = 0;
+  const addQty = Math.max(1, parseInt(qty, 10) || 1);
 
-  function formatPrice(n) {
-    return n.toLocaleString("en-IN");
+  if (existing) {
+    existing.qty += addQty;
+  } else {
+    cart.push({ productId: productId, qty: addQty });
   }
 
-  function calculateShipping(pin) {
-    if (!/^\d{6}$/.test(pin)) {
-      return { charge: 0, eta: "", message: "Please enter a valid 6-digit pincode." };
-    }
-    const prefix = pin.slice(0, 2);
-    let charge, eta;
-    if (["11", "12", "13"].includes(prefix)) {
-      charge = 30; eta = "2–4 days";
-    } else if (["40", "41", "42", "56", "57"].includes(prefix)) {
-      charge = 40; eta = "4–7 days";
-    } else {
-      charge = 60; eta = "5–9 days";
-    }
-    return { charge, eta, message: charge === 0 ? "FREE delivery" : `₹${charge} • ${eta}` };
+  saveCart(cart);
+  updateCartCount();
+}
+
+function removeFromCart(productId) {
+  const cart = loadCart().filter((item) => item.productId !== productId);
+  saveCart(cart);
+  updateCartCount();
+}
+
+function updateQuantity(productId, newQty) {
+  const qty = Math.max(1, parseInt(newQty, 10) || 1);
+  const cart = loadCart();
+  const item = cart.find((i) => i.productId === productId);
+  if (!item) return;
+
+  item.qty = qty;
+  saveCart(cart);
+  updateCartCount();
+}
+
+function clearCart() {
+  saveCart([]);
+  updateCartCount();
+}
+
+/* ---------------- Totals / Summary ---------------- */
+
+function getCartDetails() {
+  const cart = loadCart();
+  let itemsCount = 0;
+  let mrpTotal = 0;
+  let priceTotal = 0;
+
+  cart.forEach((item) => {
+    const product = findProductById(item.productId);
+    if (!product) return;
+
+    const qty = item.qty || 1;
+    itemsCount += qty;
+
+    const mrp = product.mrp || product.price || 0;
+    const price = product.price || 0;
+
+    mrpTotal += mrp * qty;
+    priceTotal += price * qty;
+  });
+
+  const discount = Math.max(0, mrpTotal - priceTotal);
+
+  return {
+    cart,
+    itemsCount,
+    mrpTotal,
+    priceTotal,
+    discount,
+  };
+}
+
+/* ---------------- Navbar Cart Badge ---------------- */
+
+function updateCartCount() {
+  const badge = document.getElementById("cartCount");
+  if (!badge) return;
+
+  const { itemsCount } = getCartDetails();
+
+  if (!itemsCount) {
+    badge.textContent = "0";
+    badge.style.visibility = "hidden";
+  } else {
+    badge.textContent = String(itemsCount);
+    badge.style.visibility = "visible";
+  }
+}
+
+// Some older code may call updateCartBadge()
+function updateCartBadge() {
+  updateCartCount();
+}
+
+/* ---------------- Cart Page Rendering ---------------- */
+
+function renderCartPage() {
+  const container = document.getElementById("cartItemsContainer");
+  if (!container) return; // not on cart page
+
+  const {
+    cart,
+    itemsCount,
+    mrpTotal,
+    priceTotal,
+    discount,
+  } = getCartDetails();
+
+  const summaryItemsCount = document.getElementById("summaryItemsCount");
+  const summaryMrp = document.getElementById("summaryMrp");
+  const summaryDiscount = document.getElementById("summaryDiscount");
+  const summaryTotal = document.getElementById("summaryTotal");
+  const summarySavingsText = document.getElementById("summarySavingsText");
+  const summaryDeliveryText = document.getElementById("summaryDeliveryText");
+
+  if (summaryItemsCount) summaryItemsCount.textContent = String(itemsCount);
+  if (summaryMrp) summaryMrp.textContent = mrpTotal.toString();
+  if (summaryDiscount) summaryDiscount.textContent = discount.toString();
+  if (summaryTotal) summaryTotal.textContent = priceTotal.toString();
+  if (summarySavingsText) {
+    summarySavingsText.textContent =
+      discount > 0
+        ? `You will save ₹${discount} on this order`
+        : "Add more eco products to unlock bigger savings.";
+  }
+  if (summaryDeliveryText && !summaryDeliveryText.dataset.fixed) {
+    summaryDeliveryText.textContent = "Enter pincode";
   }
 
-  function renderCart() {
-    const cart = getCart();
-    itemsContainer.innerHTML = "";
+  if (!cart.length) {
+    container.innerHTML = `
+      <div class="cart-empty">
+        Your cart is empty.<br/>
+        <a href="products.html" style="color:#0b5ed7;font-weight:600;margin-top:0.5rem;display:inline-block;">
+          Browse eco products →
+        </a>
+      </div>
+    `;
+    return;
+  }
 
-    if (!cart.length) {
-      itemsContainer.innerHTML =
-        `<div class="cart-empty">Your cart is empty. Add some GreenWrite products! 🌱</div>`;
-      itemsCountEl.textContent = 0;
-      mrpEl.textContent = "0";
-      discountEl.textContent = "0";
-      totalEl.textContent = "0";
-      deliveryTextEl.textContent = "Enter pincode";
-      savingsTextEl.textContent = "You will save ₹0 on this order";
-      return;
+  // Build items HTML
+  let html = "";
+  cart.forEach((item) => {
+    const product = findProductById(item.productId);
+    if (!product) return;
+
+    const qty = item.qty || 1;
+    const price = product.price || 0;
+    const mrp = product.mrp || price;
+
+    let priceHtml = `<span class="cart-item-price-current">₹${price}</span>`;
+    if (mrp > price) {
+      const offPercent = Math.round(((mrp - price) / mrp) * 100);
+      priceHtml = `
+        <span class="cart-item-price-current">₹${price}</span>
+        <span class="cart-item-price-old">₹${mrp}</span>
+        <span class="cart-item-price-off">${offPercent}% off</span>
+      `;
     }
 
-    let totalItems = 0;
-    let totalMrp = 0;
-    let totalPrice = 0;
-
-    cart.forEach((item) => {
-      const product = window.PRODUCTS.find((p) => p.id === item.id);
-      if (!product) return;
-
-      const qty = item.qty || 1;
-      totalItems += qty;
-
-      const price = product.price;
-      const mrp = product.mrp || price;
-      totalMrp += mrp * qty;
-      totalPrice += price * qty;
-
-      const offPercent = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
-
-      const row = document.createElement("div");
-      row.className = "cart-item-row";
-      row.innerHTML = `
+    html += `
+      <div class="cart-item-row" data-product-id="${item.productId}">
         <div class="cart-item-imgwrap">
-          ${product.image ? `<img src="${product.image}" alt="${product.name}">` : ""}
+          ${
+            product.image
+              ? `<img src="${product.image}" alt="${product.name}">`
+              : `<span style="font-size:2rem;">🖊️</span>`
+          }
         </div>
+
         <div>
           <div class="cart-item-main-title">${product.name}</div>
-          <div class="cart-item-meta">${product.category || ""}</div>
-          <div class="cart-item-seller">Seller: GreenWrite</div>
+          <div class="cart-item-meta">
+            ${product.tagLabel || product.category || "Eco product"}
+          </div>
+          <div class="cart-item-seller">
+            Sold by GreenWrite • Qty: ${qty}
+          </div>
 
           <div class="cart-item-price-row">
-            <span class="cart-item-price-current">₹${formatPrice(price)}</span>
-            ${mrp > price ? `<span class="cart-item-price-old">₹${formatPrice(mrp)}</span>` : ""}
-            ${offPercent > 0 ? `<span class="cart-item-price-off">${offPercent}% Off</span>` : ""}
+            ${priceHtml}
           </div>
 
           <div class="cart-item-actions-row">
             <div class="qty-control">
-              <button class="qty-btn" data-action="dec" data-id="${product.id}">−</button>
-              <div class="qty-value" data-id="${product.id}">${qty}</div>
-              <button class="qty-btn" data-action="inc" data-id="${product.id}">+</button>
+              <button class="qty-btn qty-btn-minus" type="button">−</button>
+              <div class="qty-value">${qty}</div>
+              <button class="qty-btn qty-btn-plus" type="button">+</button>
             </div>
 
             <div class="cart-item-links">
-              <span class="cart-item-link remove" data-action="remove" data-id="${product.id}">
-                REMOVE
-              </span>
+              <span class="cart-item-link remove">Remove</span>
             </div>
           </div>
         </div>
-      `;
-      itemsContainer.appendChild(row);
-    });
-
-    const totalDiscount = totalMrp - totalPrice;
-    const grandTotal = totalPrice + currentShippingCharge;
-
-    itemsCountEl.textContent = totalItems;
-    mrpEl.textContent = formatPrice(totalMrp);
-    discountEl.textContent = formatPrice(totalDiscount > 0 ? totalDiscount : 0);
-    totalEl.textContent = formatPrice(grandTotal);
-    savingsTextEl.textContent =
-      `You will save ₹${formatPrice(totalDiscount > 0 ? totalDiscount : 0)} on this order`;
-  }
-
-  // Quantity + remove handlers
-  itemsContainer.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-action]");
-    if (!btn) return;
-
-    const action = btn.dataset.action;
-    const id = btn.dataset.id;
-
-    if (action === "inc") {
-      const cart = getCart();
-      const item = cart.find((i) => i.id === id);
-      if (item) {
-        item.qty = (item.qty || 1) + 1;
-        writeCart(cart);
-        updateCartBadge();
-        renderCart();
-      }
-    } else if (action === "dec") {
-      const cart = getCart();
-      const item = cart.find((i) => i.id === id);
-      if (item) {
-        item.qty = Math.max(1, (item.qty || 1) - 1);
-        writeCart(cart);
-        updateCartBadge();
-        renderCart();
-      }
-    } else if (action === "remove") {
-      removeFromCart(id);
-      renderCart();
-    }
+      </div>
+    `;
   });
 
-  // Pincode handler
-  pincodeBtn.addEventListener("click", () => {
-    const pin = (pincodeInput.value || "").trim();
-    const { charge, eta } = calculateShipping(pin);
-    currentShippingCharge = charge;
+  container.innerHTML = html;
 
-    if (!/^\d{6}$/.test(pin)) {
-      addressTextEl.textContent = "Please enter a valid 6-digit pincode.";
-      deliveryTextEl.textContent = "Enter pincode";
-    } else {
-      addressTextEl.textContent = `Delivering to ${pin} • ${eta}`;
-      deliveryTextEl.textContent = charge ? `₹${charge}` : "FREE";
+  // Attach events
+  container.querySelectorAll(".cart-item-row").forEach((row) => {
+    const productId = row.getAttribute("data-product-id");
+    if (!productId) return;
+
+    const minusBtn = row.querySelector(".qty-btn-minus");
+    const plusBtn = row.querySelector(".qty-btn-plus");
+    const qtyDisplay = row.querySelector(".qty-value");
+    const removeLink = row.querySelector(".cart-item-link.remove");
+
+    if (minusBtn && qtyDisplay) {
+      minusBtn.addEventListener("click", () => {
+        const current = parseInt(qtyDisplay.textContent, 10) || 1;
+        const newQty = Math.max(1, current - 1);
+        updateQuantity(productId, newQty);
+        renderCartPage();
+      });
     }
 
-    renderCart();
-  });
+    if (plusBtn && qtyDisplay) {
+      plusBtn.addEventListener("click", () => {
+        const current = parseInt(qtyDisplay.textContent, 10) || 1;
+        const newQty = current + 1;
+        updateQuantity(productId, newQty);
+        renderCartPage();
+      });
+    }
 
-  renderCart();
+    if (removeLink) {
+      removeLink.addEventListener("click", () => {
+        removeFromCart(productId);
+        renderCartPage();
+      });
+    }
+  });
 }
 
-// run cart-page rendering after DOM ready
-document.addEventListener("DOMContentLoaded", renderCartPage);
+/* ---------------- Pincode & Delivery (Cart page) ---------------- */
+
+function setupPincodeHandler() {
+  const pinInput = document.getElementById("pincodeInput");
+  const pinBtn = document.getElementById("pincodeBtn");
+  const deliveryText = document.getElementById("summaryDeliveryText");
+  const addressText = document.getElementById("cartAddressText");
+  const addressTextSummary = document.getElementById("cartAddressText-summary");
+
+  if (!pinInput || !pinBtn) return; // not on cart page
+
+  function applyShipping(pin) {
+    const details = getCartDetails();
+    const cartTotal = details.priceTotal || 0;
+
+    let shipping = 0;
+    let msg = "";
+    if (cartTotal >= 999) {
+      shipping = 0;
+      msg = "Free delivery";
+    } else {
+      shipping = 80;
+      msg = `₹${shipping} — free above ₹999`;
+    }
+
+    const summaryTotal = document.getElementById("summaryTotal");
+    if (summaryTotal) {
+      summaryTotal.textContent = (cartTotal + shipping).toString();
+    }
+
+    if (deliveryText) {
+      deliveryText.textContent = msg;
+      // mark as "user set", so renderCartPage does not override it
+      deliveryText.dataset.fixed = "1";
+    }
+
+    if (addressText) {
+      addressText.textContent = `We deliver to pincode ${pin}. Standard delivery 5–7 working days depending on your location.`;
+    }
+    if (addressTextSummary) {
+      addressTextSummary.textContent = `Pincode ${pin}, approx. 5–7 working days.`;
+    }
+
+    // save to localStorage (per user) so it stays
+    const key = getCartKey() + "_shipping";
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        pin,
+        shipping,
+      })
+    );
+  }
+
+  // Load saved pincode/shipping if available
+  try {
+    const key = getCartKey() + "_shipping";
+    const raw = localStorage.getItem(key);
+    if (raw) {
+      const data = JSON.parse(raw);
+      if (data.pin) {
+        pinInput.value = data.pin;
+        applyShipping(data.pin);
+      }
+    }
+  } catch {}
+
+  pinBtn.addEventListener("click", () => {
+    const pin = pinInput.value.trim();
+    if (!/^[1-9][0-9]{5}$/.test(pin)) {
+      alert("Please enter a valid 6-digit pincode.");
+      return;
+    }
+    applyShipping(pin);
+  });
+}
+
+/* ---------------- Init on DOMContentLoaded ---------------- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Update navbar badge on every page
+  updateCartCount();
+
+  // If on cart page, render items and setup pincode handling
+  renderCartPage();
+  setupPincodeHandler();
+});
+
+/* ---------------- Expose to window (for inline HTML calls) ---------------- */
+
+window.addToCart = addToCart;
+window.updateCartCount = updateCartCount;
+window.updateCartBadge = updateCartBadge;
+window.renderCartPage = renderCartPage;
+window.clearCart = clearCart;
+window.removeFromCart = removeFromCart;
+window.updateQuantity = updateQuantity;
