@@ -1,8 +1,8 @@
 // checkout-firebase.js
-import { db, collection, addDoc } from "./firebase.js";
+import { db, collection, addDoc } from "./js/firebase.js";
 
 window.saveOrderToFirebase = async function saveOrderToFirebase(orderData) {
-  console.log("Saving order to Firestore…", orderData); // debug
+  console.log("Saving order to Firestore...", orderData); // debug
 
   const colRef = collection(db, "orders");
   const docRef = await addDoc(colRef, {
