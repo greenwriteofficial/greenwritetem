@@ -609,10 +609,16 @@
   <!-- =================== MAIN PRODUCT =================== -->
   <main class="product-main">
     <div class="product-inner">
-      <!-- LEFT: IMAGE -->
-      <div class="product-img-card">
-        <img id="productImage" src="" alt="Product image" />
-      </div>
+     <!-- LEFT: IMAGE + GALLERY -->
+<div class="product-img-card">
+  <div class="product-main-img-wrap">
+    <img id="productImage" src="" alt="Product image" />
+  </div>
+
+  <div id="productThumbnails" class="product-thumbs">
+    <!-- Thumbnails injected by JS -->
+  </div>
+</div>
 
       <!-- RIGHT: INFO -->
       <div class="product-info">
@@ -758,3 +764,4 @@
   <script type="module" src="auth.js"></script>
 </body>
 </html>
+
