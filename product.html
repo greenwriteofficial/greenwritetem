@@ -717,158 +717,219 @@
 
   <!-- =================== SCRIPTS =================== -->
   <script src="products-data.js"></script>
-  <script src="cart.js"></script>
+<script src="cart.js"></script>
 
-  <script>
-    // Footer year
-    document.getElementById("year").textContent = new Date().getFullYear();
+<script>
+(function () {
+  // Footer year
+  var yearEl = document.getElementById("year");
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
+  }
 
-    // Query param helper
-    function getQueryParam(name) {
-      return new URLSearchParams(window.location.search).get(name);
+  // Query param helper
+  function getQueryParam(name) {
+    var params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+
+  var id = getQueryParam("id");
+  var products = (window.PRODUCTS || []);
+  var product = null;
+
+  for (var i = 0; i < products.length; i++) {
+    if (products[i].id === id) {
+      product = products[i];
+      break;
     }
+  }
 
-    const id = getQueryParam("id");
-    const product = window.PRODUCTS.find(p => p.id === id);
+  var heroTitle      = document.getElementById("heroTitle");
+  var heroBreadcrumb = document.getElementById("heroBreadcrumb");
+  var imgEl          = document.getElementById("productImage");
+  var thumbsEl       = document.getElementById("productThumbnails");
+  var titleEl        = document.getElementById("productTitle");
+  var tagEl          = document.getElementById("productTag");
+  var priceEl        = document.getElementById("productPrice");
+  var descEl         = document.getElementById("productDescription");
+  var metaEl         = document.getElementById("productMeta");
+  var qtyInput       = document.getElementById("qtyInput");
+  var addBtn         = document.getElementById("addToCartBtn");
 
-    const heroTitle      = document.getElementById("heroTitle");
-    const heroBreadcrumb = document.getElementById("heroBreadcrumb");
-    const imgEl          = document.getElementById("productImage");
-    const thumbsEl       = document.getElementById("productThumbnails");
-    const titleEl        = document.getElementById("productTitle");
-    const tagEl          = document.getElementById("productTag");
-    const priceEl        = document.getElementById("productPrice");
-    const descEl         = document.getElementById("productDescription");
-    const metaEl         = document.getElementById("productMeta");
-    const qtyInput       = document.getElementById("qtyInput");
-    const addBtn         = document.getElementById("addToCartBtn");
-
-    if (!product) {
-      heroTitle.textContent = "Product Not Found";
-      heroBreadcrumb.textContent = "Home › Shop › Not Found";
-      titleEl.textContent = "Product not found";
-      priceEl.textContent = "₹0";
+  if (!product) {
+    if (heroTitle)      heroTitle.textContent = "Product Not Found";
+    if (heroBreadcrumb) heroBreadcrumb.textContent = "Home \u203a Shop \u203a Not Found";
+    if (titleEl)        titleEl.textContent = "Product not found";
+    if (priceEl)        priceEl.textContent = "₹0";
+    if (descEl) {
       descEl.textContent =
         "This product does not exist or is no longer available. Please go back to the shop page.";
-      imgEl.style.display = "none";
-      if (thumbsEl) thumbsEl.style.display = "none";
-      tagEl.style.display = "none";
+    }
+    if (imgEl) imgEl.style.display = "none";
+    if (thumbsEl) thumbsEl.style.display = "none";
+    if (tagEl) tagEl.style.display = "none";
+    if (addBtn) {
       addBtn.disabled = true;
       addBtn.textContent = "Not available";
+    }
+    return;
+  }
+
+  // ---------- We DO have a product ----------
+
+  if (heroTitle)      heroTitle.textContent = product.name;
+  if (heroBreadcrumb) heroBreadcrumb.textContent = "Home \u203a Shop \u203a " + product.name;
+  if (titleEl)        titleEl.textContent = product.name;
+
+  // Build gallery from product.gallery or fallback to product.image
+  var gallery = [];
+  if (product.gallery && product.gallery.length) {
+    gallery = product.gallery.slice();
+  } else if (product.image) {
+    gallery = [product.image];
+  }
+
+  if (imgEl) {
+    if (gallery.length) {
+      imgEl.src = gallery[0];
+      imgEl.alt = product.name;
+      imgEl.style.display = "";
     } else {
-      heroTitle.textContent = product.name;
-      heroBreadcrumb.textContent = `Home › Shop › ${product.name}`;
-      titleEl.textContent = product.name;
+      imgEl.src = "";
+      imgEl.alt = "";
+      imgEl.style.display = "none";
+    }
+  }
 
-      // Build gallery from product.gallery or fall back to product.image
-      const gallery =
-        Array.isArray(product.gallery) && product.gallery.length
-          ? product.gallery
-          : (product.image ? [product.image] : []);
+  // Thumbnails
+  if (thumbsEl) {
+    thumbsEl.innerHTML = "";
+    if (gallery.length > 1) {
+      for (var g = 0; g < gallery.length; g++) {
+        (function (src, index) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "product-thumb" + (index === 0 ? " is-active" : "");
+          btn.innerHTML =
+            "<img src=\"" + src + "\" alt=\"" +
+            product.name + " photo " + (index + 1) + "\">";
 
-      if (gallery.length) {
-        imgEl.src = gallery[0];
-        imgEl.alt = product.name;
-        imgEl.style.display = "";
-      } else {
-        imgEl.src = "";
-        imgEl.alt = "";
-        imgEl.style.display = "none";
-      }
-
-      // Render thumbnails if more than one image
-      if (thumbsEl) {
-        thumbsEl.innerHTML = "";
-        if (gallery.length > 1) {
-          gallery.forEach((src, index) => {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "product-thumb" + (index === 0 ? " is-active" : "");
-            btn.innerHTML = `<img src="${src}" alt="${product.name} photo ${index + 1}">`;
-
-            btn.addEventListener("click", () => {
+          btn.addEventListener("click", function () {
+            if (imgEl) {
               imgEl.src = src;
               imgEl.alt = product.name;
-
-              thumbsEl
-                .querySelectorAll(".product-thumb.is-active")
-                .forEach(el => el.classList.remove("is-active"));
-
-              btn.classList.add("is-active");
-            });
-
-            thumbsEl.appendChild(btn);
+            }
+            var activeThumbs = thumbsEl.querySelectorAll(".product-thumb.is-active");
+            for (var k = 0; k < activeThumbs.length; k++) {
+              activeThumbs[k].classList.remove("is-active");
+            }
+            btn.classList.add("is-active");
           });
-          thumbsEl.style.display = "flex";
-        } else {
-          thumbsEl.style.display = "none";
-        }
+
+          thumbsEl.appendChild(btn);
+        })(gallery[g], g);
       }
-
-      tagEl.textContent = product.tagLabel || product.category || "GreenWrite product";
-
-      const desc = product.description || product.short || "";
-      descEl.textContent = desc;
-
-      if (product.mrp && product.mrp > product.price) {
-        const off = Math.round(((product.mrp - product.price) / product.mrp) * 100);
-        priceEl.innerHTML = `
-          ₹${product.price}
-          <span style="text-decoration:line-through;margin-left:6px;color:#777;font-size:0.9rem;">₹${product.mrp}</span>
-          <span style="margin-left:6px;color:#059b52;font-weight:600;font-size:0.9rem;">${off}% off</span>
-        `;
-      } else {
-        priceEl.textContent = "₹" + product.price;
-      }
-
-      const badgeText = product.badge ? \`Highlight: ${product.badge}\` : "";
-      const categoryText = product.category ? \`Category: ${product.category}\` : "";
-      metaEl.innerHTML = `
-        ${badgeText ? `<strong>${badgeText}</strong>` : ""}
-        ${badgeText && categoryText ? "<br>" : ""}
-        ${categoryText}
-      `;
-
-      addBtn.addEventListener("click", () => {
-        const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
-        addToCart(product.id, qty);
-        if (typeof updateCartCount === "function") {
-          updateCartCount();
-        }
-        addBtn.textContent = "Added!";
-        setTimeout(() => {
-          addBtn.innerHTML = `<span>🛒</span><span>Add to cart</span>`;
-        }, 900);
-      });
+      thumbsEl.style.display = "flex";
+    } else {
+      thumbsEl.style.display = "none";
     }
+  }
 
-    // Mobile nav toggle + init cart badge
-    document.addEventListener("DOMContentLoaded", () => {
-      const navToggle = document.getElementById("navToggle");
-      const navLinks  = document.getElementById("navLinks");
+  // Tag / badge
+  if (tagEl) {
+    tagEl.textContent =
+      product.tagLabel || product.category || "GreenWrite product";
+  }
 
-      if (navToggle && navLinks) {
-        navToggle.addEventListener("click", () => {
-          navToggle.classList.toggle("is-open");
-          navLinks.classList.toggle("is-open");
-        });
+  // Description
+  if (descEl) {
+    var descText = product.description || product.short || "";
+    descEl.textContent = descText;
+  }
 
-        navLinks.querySelectorAll("a").forEach(link => {
-          link.addEventListener("click", () => {
-            navToggle.classList.remove("is-open");
-            navLinks.classList.remove("is-open");
-          });
-        });
+  // Price + discount
+  if (priceEl) {
+    if (product.mrp && product.mrp > product.price) {
+      var off = Math.round(((product.mrp - product.price) / product.mrp) * 100);
+      priceEl.innerHTML =
+        "₹" + product.price +
+        "<span style=\"text-decoration:line-through;margin-left:6px;color:#777;font-size:0.9rem;\">₹" +
+        product.mrp + "</span>" +
+        "<span style=\"margin-left:6px;color:#059b52;font-weight:600;font-size:0.9rem;\">" +
+        off + "% off</span>";
+    } else {
+      priceEl.textContent = "₹" + product.price;
+    }
+  }
+
+  // Meta
+  if (metaEl) {
+    var badgeText = product.badge ? ("Highlight: " + product.badge) : "";
+    var categoryText = product.category ? ("Category: " + product.category) : "";
+    var metaHtml = "";
+    if (badgeText) {
+      metaHtml += "<strong>" + badgeText + "</strong>";
+    }
+    if (badgeText && categoryText) {
+      metaHtml += "<br>";
+    }
+    if (categoryText) {
+      metaHtml += categoryText;
+    }
+    metaEl.innerHTML = metaHtml;
+  }
+
+  // Add to cart
+  if (addBtn && qtyInput) {
+    addBtn.addEventListener("click", function () {
+      var qty = parseInt(qtyInput.value, 10);
+      if (isNaN(qty) || qty < 1) qty = 1;
+
+      if (typeof addToCart === "function") {
+        addToCart(product.id, qty);
       }
-
       if (typeof updateCartCount === "function") {
         updateCartCount();
       }
-    });
-  </script>
 
-  <!-- GOOGLE AUTH -->
-  <script type="module" src="auth.js"></script>
+      addBtn.textContent = "Added!";
+      setTimeout(function () {
+        addBtn.innerHTML = "<span>🛒</span><span>Add to cart</span>";
+      }, 900);
+    });
+  }
+
+  // Mobile nav + cart count init
+  document.addEventListener("DOMContentLoaded", function () {
+    var navToggle = document.getElementById("navToggle");
+    var navLinks  = document.getElementById("navLinks");
+
+    if (navToggle && navLinks) {
+      navToggle.addEventListener("click", function () {
+        navToggle.classList.toggle("is-open");
+        navLinks.classList.toggle("is-open");
+      });
+
+      var linkEls = navLinks.querySelectorAll("a");
+      for (var i = 0; i < linkEls.length; i++) {
+        linkEls[i].addEventListener("click", function () {
+          navToggle.classList.remove("is-open");
+          navLinks.classList.remove("is-open");
+        });
+      }
+    }
+
+    if (typeof updateCartCount === "function") {
+      updateCartCount();
+    }
+  });
+
+})();
+</script>
+
+<!-- GOOGLE AUTH -->
+<script type="module" src="auth.js"></script>
 </body>
 </html>
+
 
