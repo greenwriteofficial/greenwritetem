@@ -28,59 +28,70 @@ window.PRODUCTS = [
       "Set of 10 plantable pencils with different seed types. Perfect for students and workshops.",
     badge: "Popular",
   },
+
+  // NEW PRODUCTS
   {
-  id: "diary-cork-a5",
-  name: "Hard Bound Paper Cork Diary (A5)",
-  price: 249,                // selling price
-  mrp: 311,                  // calculated MRP
-  image: "images/diary.jpg", // change image later
-  supplierId: "s1",
-
-  description: "Eco-friendly A5 cork-cover diary with 90 GSM recycled paper. Hard bound, handmade, perfect for college, journaling & planning.",
-  features: [
-    "A5 Size",
-    "90 GSM Recycled Paper",
-    "Hard Bound + Cork Cover",
-    "Handmade",
-    "Single-Line Pages",
-    "Monthly Planner Included"
-},
-{
-  id: "soy-scented-candle",
-  name: "Soy Wax Aesthetic Scented Candle",
-  price: 189,
-  mrp: 252,
-  image: "images/candle.jpg",
-  supplierId: "s1",
-
-  description: "Natural soy-wax candle with aesthetic minimalist design. Clean burn, soothing fragrance—perfect for decor, meditation, and gifting.",
-  features: [
-    "Made from 100% Soy Wax",
-    "2–4 Hours Burn Time",
-    "Lead-Free Cotton Wick",
-    "Low-Smoke & Non-Toxic",
-    "Minimal Modern Design"
-},
-{
-  id: "bamboo-gift-box",
-  name: "Natural Corporate Bamboo Gift Box (12×16)",
-  price: 649,
-  mrp: 865,
-  image: "images/bamboo-box.jpg",
-  supplierId: "s1",
-
-  description: "Premium eco-friendly bamboo gift box for corporate gifting, festive gifting & events. Strong, reusable and elegant.",
-  features: [
-    "Natural Bamboo Finish",
-    "Durable & Reusable",
-    "Perfect for Corporate Gifts",
-    "Handcrafted Finish",
-    "Supports Branding & Logo Engraving"
-},
+    id: "diary-cork-a5",
+    name: "Hard Bound Paper Cork Diary (A5)",
+    price: 249,                // selling price
+    mrp: 311,                  // MRP = 249 / 0.8
+    category: "Stationery",
+    tagLabel: "NOTEBOOKS & JOURNALS",
+    image: "images/diary.jpg", // update if you change file name
+    short: "Eco-friendly cork-cover A5 diary with recycled paper.",
+    description:
+      "Eco-friendly A5 cork-cover diary with 90 GSM recycled paper. Hard bound, handmade, perfect for college, journaling & planning.",
+    badge: "New",
+    supplierId: "s1",
+    features: [
+      "A5 size",
+      "90 GSM recycled paper",
+      "Hard bound + cork cover",
+      "Handmade",
+      "Single-line pages",
+      "Monthly planner included",
+    ],
+  },
+  {
+    id: "soy-scented-candle",
+    name: "Soy Wax Aesthetic Scented Candle",
+    price: 189,
+    mrp: 252, // MRP = 189 / 0.75
+    category: "Home & Decor",
+    tagLabel: "CANDLES",
+    image: "images/candle.jpg",
+    short: "Minimal soy-wax scented candle for calm, cozy vibes.",
+    description:
+      "Natural soy-wax candle with an aesthetic minimalist design. Clean burn and soothing fragrance—perfect for decor, meditation, and gifting.",
+    badge: "New",
+    supplierId: "s1",
+    features: [
+      "Made from 100% soy wax",
+      "2–4 hours burn time",
+      "Lead-free cotton wick",
+      "Low-smoke & non-toxic",
+      "Minimal modern design",
+    ],
+  },
+  {
+    id: "bamboo-gift-box",
+    name: "Natural Corporate Bamboo Gift Box (12×16)",
+    price: 649,
+    mrp: 865, // MRP = 649 / 0.75
+    category: "Gifting",
+    tagLabel: "CORPORATE GIFTS",
+    image: "images/bamboo-box.jpg",
+    short: "Premium reusable bamboo gift box for corporate & festive gifting.",
+    description:
+      "Premium eco-friendly bamboo gift box for corporate gifting, festive gifting & events. Strong, reusable and elegant.",
+    badge: "New",
+    supplierId: "s1",
+    features: [
+      "Natural bamboo finish",
+      "Durable & reusable",
+      "Perfect for corporate gifts",
+      "Handcrafted premium finish",
+      "Supports branding & logo engraving",
+    ],
+  },
 ];
-
-
-
-
-
-
