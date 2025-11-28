@@ -818,7 +818,7 @@
           <span style="margin-left:6px;color:#059b52;font-weight:600;font-size:0.9rem;">${off}% off</span>
         `;
       } else {
-        priceEl.textContent = \`₹${product.price}\`;
+        priceEl.textContent = "₹" + product.price;
       }
 
       const badgeText = product.badge ? \`Highlight: ${product.badge}\` : "";
@@ -871,3 +871,4 @@
   <script type="module" src="auth.js"></script>
 </body>
 </html>
+
