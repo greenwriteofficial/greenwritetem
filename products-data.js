@@ -107,7 +107,7 @@ window.PRODUCTS = [
     category: "Home & Decor",
     tagLabel: "CANDLES & FRAGRANCE",
 
-    image: "images/soy-scented-candle-1.webp",
+    image: "images/soy-scented-candle-0.webp",
 
     gallery: [
       "images/soy-scented-candle-1.webp",
@@ -171,3 +171,4 @@ window.PRODUCTS = [
   // Add more products below by copying one of the blocks.
   // ------------------------------------------------------
 ];
+
