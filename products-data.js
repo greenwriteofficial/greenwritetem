@@ -110,6 +110,7 @@ window.PRODUCTS = [
     image: "images/soy-scented-candle-0.webp",
 
     gallery: [
+      "images/soy-scented-candle-0.webp",
       "images/soy-scented-candle-1.webp",
       "images/soy-scented-candle-2.webp",
       "images/soy-scented-candle-3.webp"
@@ -171,4 +172,5 @@ window.PRODUCTS = [
   // Add more products below by copying one of the blocks.
   // ------------------------------------------------------
 ];
+
 
