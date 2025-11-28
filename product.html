@@ -346,14 +346,74 @@
       padding: 1.8rem;
       box-shadow: 0 16px 30px rgba(0, 0, 0, 0.12);
       display: flex;
+      flex-direction: column;
       justify-content: center;
-      align-items: center;
+      align-items: stretch;
       min-height: 260px;
     }
 
-    .product-img-card img {
-      max-height: 320px;
-      object-fit: contain;
+    /* MAIN IMAGE WRAPPER */
+
+    .product-main-img-wrap {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      border-radius: 1.4rem;
+      overflow: hidden;
+      background: #f5f7fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-main-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.25s ease;
+    }
+
+    .product-main-img-wrap img:hover {
+      transform: scale(1.03);
+    }
+
+    /* THUMBNAILS */
+
+    .product-thumbs {
+      margin-top: 0.75rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+    }
+
+    .product-thumb {
+      border: 2px solid transparent;
+      border-radius: 0.9rem;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      flex: 0 0 58px;
+      height: 58px;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s ease, transform 0.12s ease;
+    }
+
+    .product-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-thumb:hover {
+      transform: translateY(-1px);
+    }
+
+    .product-thumb.is-active {
+      border-color: #0b5ed7;
     }
 
     .product-info {
@@ -535,6 +595,15 @@
       .product-img-card {
         padding: 1.4rem;
       }
+
+      .product-thumbs {
+        gap: 0.4rem;
+      }
+
+      .product-thumb {
+        flex-basis: 52px;
+        height: 52px;
+      }
     }
   </style>
 </head>
@@ -609,16 +678,16 @@
   <!-- =================== MAIN PRODUCT =================== -->
   <main class="product-main">
     <div class="product-inner">
-     <!-- LEFT: IMAGE + GALLERY -->
-<div class="product-img-card">
-  <div class="product-main-img-wrap">
-    <img id="productImage" src="" alt="Product image" />
-  </div>
+      <!-- LEFT: IMAGE + GALLERY -->
+      <div class="product-img-card">
+        <div class="product-main-img-wrap">
+          <img id="productImage" src="" alt="Product image" />
+        </div>
 
-  <div id="productThumbnails" class="product-thumbs">
-    <!-- Thumbnails injected by JS -->
-  </div>
-</div>
+        <div id="productThumbnails" class="product-thumbs">
+          <!-- Thumbnails injected by JS -->
+        </div>
+      </div>
 
       <!-- RIGHT: INFO -->
       <div class="product-info">
@@ -660,11 +729,12 @@
     }
 
     const id = getQueryParam("id");
-    const product = PRODUCTS.find(p => p.id === id);
+    const product = window.PRODUCTS.find(p => p.id === id);
 
     const heroTitle      = document.getElementById("heroTitle");
     const heroBreadcrumb = document.getElementById("heroBreadcrumb");
     const imgEl          = document.getElementById("productImage");
+    const thumbsEl       = document.getElementById("productThumbnails");
     const titleEl        = document.getElementById("productTitle");
     const tagEl          = document.getElementById("productTag");
     const priceEl        = document.getElementById("productPrice");
@@ -681,6 +751,7 @@
       descEl.textContent =
         "This product does not exist or is no longer available. Please go back to the shop page.";
       imgEl.style.display = "none";
+      if (thumbsEl) thumbsEl.style.display = "none";
       tagEl.style.display = "none";
       addBtn.disabled = true;
       addBtn.textContent = "Not available";
@@ -689,12 +760,49 @@
       heroBreadcrumb.textContent = `Home › Shop › ${product.name}`;
       titleEl.textContent = product.name;
 
-      if (product.image) {
-        imgEl.src = product.image;
+      // Build gallery from product.gallery or fall back to product.image
+      const gallery =
+        Array.isArray(product.gallery) && product.gallery.length
+          ? product.gallery
+          : (product.image ? [product.image] : []);
+
+      if (gallery.length) {
+        imgEl.src = gallery[0];
         imgEl.alt = product.name;
+        imgEl.style.display = "";
       } else {
         imgEl.src = "";
         imgEl.alt = "";
+        imgEl.style.display = "none";
+      }
+
+      // Render thumbnails if more than one image
+      if (thumbsEl) {
+        thumbsEl.innerHTML = "";
+        if (gallery.length > 1) {
+          gallery.forEach((src, index) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "product-thumb" + (index === 0 ? " is-active" : "");
+            btn.innerHTML = `<img src="${src}" alt="${product.name} photo ${index + 1}">`;
+
+            btn.addEventListener("click", () => {
+              imgEl.src = src;
+              imgEl.alt = product.name;
+
+              thumbsEl
+                .querySelectorAll(".product-thumb.is-active")
+                .forEach(el => el.classList.remove("is-active"));
+
+              btn.classList.add("is-active");
+            });
+
+            thumbsEl.appendChild(btn);
+          });
+          thumbsEl.style.display = "flex";
+        } else {
+          thumbsEl.style.display = "none";
+        }
       }
 
       tagEl.textContent = product.tagLabel || product.category || "GreenWrite product";
@@ -710,11 +818,11 @@
           <span style="margin-left:6px;color:#059b52;font-weight:600;font-size:0.9rem;">${off}% off</span>
         `;
       } else {
-        priceEl.textContent = `₹${product.price}`;
+        priceEl.textContent = \`₹${product.price}\`;
       }
 
-      const badgeText = product.badge ? `Highlight: ${product.badge}` : "";
-      const categoryText = product.category ? `Category: ${product.category}` : "";
+      const badgeText = product.badge ? \`Highlight: ${product.badge}\` : "";
+      const categoryText = product.category ? \`Category: ${product.category}\` : "";
       metaEl.innerHTML = `
         ${badgeText ? `<strong>${badgeText}</strong>` : ""}
         ${badgeText && categoryText ? "<br>" : ""}
@@ -734,7 +842,7 @@
       });
     }
 
-    // Mobile nav toggle
+    // Mobile nav toggle + init cart badge
     document.addEventListener("DOMContentLoaded", () => {
       const navToggle = document.getElementById("navToggle");
       const navLinks  = document.getElementById("navLinks");
@@ -753,7 +861,6 @@
         });
       }
 
-      // Init cart badge if function exists
       if (typeof updateCartCount === "function") {
         updateCartCount();
       }
@@ -764,4 +871,3 @@
   <script type="module" src="auth.js"></script>
 </body>
 </html>
-
