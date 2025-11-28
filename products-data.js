@@ -40,7 +40,7 @@ window.PRODUCTS = [
     image: "images/diary.jpg", // update if you change file name
     short: "Eco-friendly cork-cover A5 diary with recycled paper.",
     description:
-      "Eco-friendly A5 cork-cover diary with 90 GSM recycled paper. Hard bound, handmade, perfect for college, journaling & planning.",
+      "Eco-friendly A5 cork-cover diary with 90 GSM recycled paper. Upto 149 Pages, Hard bound, handmade, perfect for college, journaling & planning.",
     badge: "New",
     supplierId: "s1",
     features: [
@@ -95,3 +95,4 @@ window.PRODUCTS = [
     ],
   },
 ];
+
